@@ -8,6 +8,8 @@ export function GetSavedOutputDir():Promise<string>;
 
 export function GetSpotifyCredentials():Promise<main.SpotifyCredsDTO>;
 
+export function GetVersion():Promise<string>;
+
 export function PickDirectory():Promise<string>;
 
 export function Resolve(arg1:string,arg2:string,arg3:string):Promise<main.ResolveResult>;

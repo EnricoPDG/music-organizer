@@ -7,6 +7,12 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "http://localhost:5173",
   "author": {
-    "name": "enrico papsch di giacomo"
+    "name": "Enrico Papsch Di Giacomo"
+  },
+  "info": {
+    "productName": "Music Organizer",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © 2026 Enrico Papsch Di Giacomo",
+    "comments": "Download audio from YouTube, Spotify and SoundCloud"
   }
 }

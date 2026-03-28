@@ -14,6 +14,10 @@ export function GetSpotifyCredentials() {
   return window['go']['main']['App']['GetSpotifyCredentials']();
 }
 
+export function GetVersion() {
+  return window['go']['main']['App']['GetVersion']();
+}
+
 export function PickDirectory() {
   return window['go']['main']['App']['PickDirectory']();
 }

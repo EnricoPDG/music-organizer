@@ -27,8 +27,11 @@ func NewApp() *App { return &App{} }
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	log.WithField("version", "dev").Info("app started")
+	log.WithField("version", Version).Info("app started")
 }
+
+// GetVersion returns the application version string.
+func (a *App) GetVersion() string { return Version }
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

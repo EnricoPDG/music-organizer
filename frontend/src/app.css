@@ -25,12 +25,15 @@ body {
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 24px 24px;
   color: var(--text);
-  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-family: 'VT323', monospace;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 56px 32px;
 }
+
+/* All inputs inherit VT323 */
+input { font-family: 'VT323', monospace; }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -55,6 +58,19 @@ a:hover { text-decoration: underline; }
   margin-bottom: 20px;
 }
 
+/* ── Top-bar right cluster ─────────────────────────────────────────────────── */
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.version {
+  font-size: 1rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
 /* ── GitHub link ───────────────────────────────────────────────────────────── */
 .gh-link {
   color: var(--muted);
@@ -69,20 +85,21 @@ a:hover { text-decoration: underline; }
 /* ── Typography ────────────────────────────────────────────────────────────── */
 h1 {
   color: var(--accent);
-  font-size: 1.55rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: 2.8rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
 h2 {
   color: var(--accent);
-  font-size: 1rem;
-  letter-spacing: 0.1em;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.subtitle { color: var(--muted); font-size: 0.85rem; margin-bottom: 32px; }
-.hint { color: var(--muted); font-size: 0.88rem; margin-bottom: 20px; line-height: 1.6; }
+.subtitle { color: var(--muted); font-size: 1.3rem; margin-bottom: 32px; letter-spacing: 0.06em; }
+.hint { color: var(--muted); font-size: 1.25rem; margin-bottom: 20px; line-height: 1.4; letter-spacing: 0.04em; }
 
 /* ── Platform tags (StepURL) ───────────────────────────────────────────────── */
 .platform-tags {
@@ -112,8 +129,8 @@ h2 {
 /* ── Form Controls ─────────────────────────────────────────────────────────── */
 label {
   display: block;
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 8px;
@@ -128,8 +145,8 @@ input[type=number] {
   border-radius: 2px;
   color: var(--text);
   font-family: inherit;
-  font-size: 1rem;
-  padding: 13px 16px;
+  font-size: 1.4rem;
+  padding: 10px 16px;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -153,11 +170,11 @@ button {
   border: 1px solid var(--accent);
   border-radius: 2px;
   font-family: inherit;
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 13px 24px;
+  padding: 8px 24px;
   cursor: pointer;
   transition: background 0.15s, box-shadow 0.15s, opacity 0.15s;
   white-space: nowrap;
@@ -189,6 +206,44 @@ button:disabled { opacity: 0.25; cursor: default; box-shadow: none; background: 
   text-transform: uppercase;
 }
 
+/* ── Custom checkbox (LED style) ───────────────────────────────────────────── */
+.cb-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.cb {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--bg);
+  position: relative;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.cb-input:checked ~ .cb,
+.cb-input:checked + .cb {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--glow);
+}
+.cb-input:checked ~ .cb::after,
+.cb-input:checked + .cb::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 3px;
+  top: 7px;
+  width: 4px;
+  height: 2px;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #000;
+  transform: rotate(-45deg) translate(1px, -3px);
+}
+
 /* ── Select bar ────────────────────────────────────────────────────────────── */
 .select-bar {
   display: flex;
@@ -198,18 +253,13 @@ button:disabled { opacity: 0.25; cursor: default; box-shadow: none; background: 
 .select-all {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  gap: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
   cursor: pointer;
   user-select: none;
-}
-.select-all input[type=checkbox] {
-  width: auto;
-  accent-color: var(--accent);
-  cursor: pointer;
 }
 
 /* ── Track List ────────────────────────────────────────────────────────────── */
@@ -225,20 +275,17 @@ button:disabled { opacity: 0.25; cursor: default; box-shadow: none; background: 
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 18px;
+  padding: 8px 18px;
   border-bottom: 1px solid var(--border);
   border-left: 2px solid transparent;
-  font-size: 0.92rem;
+  font-size: 1.35rem;
   background: var(--surface);
   cursor: pointer;
   transition: border-left-color 0.12s, background 0.12s;
 }
 .track:hover { border-left-color: var(--accent); background: #0f1525; }
-.track input[type=checkbox] {
-  width: auto;
-  flex-shrink: 0;
-  accent-color: var(--accent);
-  cursor: pointer;
+.track-selected {
+  background: #0d1628;
 }
 .track:last-child { border-bottom: none; }
 
