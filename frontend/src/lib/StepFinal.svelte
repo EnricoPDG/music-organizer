@@ -169,7 +169,8 @@
   {#if !loading && !error && tracks.length > 0}
     <div class="select-bar">
       <label class="select-all">
-        <input type="checkbox" checked={allSelected} on:change={toggleAll} />
+        <input type="checkbox" class="cb-input" checked={allSelected} on:change={toggleAll} />
+        <span class="cb"></span>
         Select all
       </label>
     </div>
@@ -183,12 +184,14 @@
       <div class="loading" style="color:var(--red)">{error}</div>
     {:else}
       {#each tracks as track, i (i)}
-        <label class="track">
+        <label class="track" class:track-selected={track.selected}>
           <input
             type="checkbox"
+            class="cb-input"
             bind:checked={track.selected}
             disabled={downloading}
           />
+          <span class="cb"></span>
           <span
             class="badge {track.status}"
             title={track.message}
