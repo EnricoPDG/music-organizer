@@ -1,0 +1,47 @@
+# ── Go ──────────────────────────────────────────────────────────────────────
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+go.work
+go.work.sum
+
+# ── Wails ───────────────────────────────────────────────────────────────────
+build/bin/
+frontend/dist/
+frontend/node_modules/
+frontend/package.json.md5
+
+# ── JSON / config ───────────────────────────────────────────────────────────
+*.local.json
+config.json
+
+# ── Env / secrets ───────────────────────────────────────────────────────────
+.env
+.env.*
+*.secret
+
+# ── macOS ───────────────────────────────────────────────────────────────────
+.DS_Store
+__MACOSX/
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+.fseventsd
+._*
+
+# ── Editor / IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Claude ──────────────────────────────────────────────────────────────────
+.claude/
