@@ -28,29 +28,29 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
 
 **Purpose**: Project initialization and tooling
 
-- [ ] T001 Scaffold the Tauri 2 + SvelteKit (TypeScript) app at the repository root with `pnpm create tauri-app`. Keep the `src/` and `src-tauri/` layout from plan.md, and set the app identifier `dev.musicorganizer.app` and product name "Music Organizer" in `src-tauri/tauri.conf.json`
-- [ ] T002 Configure SvelteKit for SPA mode: `@sveltejs/adapter-static` with `fallback: "index.html"` in `svelte.config.js`, and `export const ssr = false; export const prerender = false;` in `src/routes/+layout.ts`
-- [ ] T003 Add the Rust dependencies to `src-tauri/Cargo.toml`, with exact pins where the plan says so:
+- [X] T001 Scaffold the Tauri 2 + SvelteKit (TypeScript) app at the repository root with `pnpm create tauri-app`. Keep the `src/` and `src-tauri/` layout from plan.md, and set the app identifier `dev.musicorganizer.app` and product name "Music Organizer" in `src-tauri/tauri.conf.json`
+- [X] T002 Configure SvelteKit for SPA mode: `@sveltejs/adapter-static` with `fallback: "index.html"` passed to `sveltekit()` in `vite.config.ts` (SvelteKit 3 no longer reads `svelte.config.js`), and `export const ssr = false; export const prerender = false;` in `src/routes/+layout.ts`
+- [X] T003 Add the Rust dependencies to `src-tauri/Cargo.toml`, with exact pins where the plan says so:
   - tauri 2.12, tauri-plugin-dialog, tauri-plugin-opener, tauri-plugin-shell, tauri-plugin-updater
   - `tauri-specta = "=2.0.0-rc.25"`, `specta = "=2.0.0-rc.25"`, specta-typescript
   - tokio 1.53 (full), reqwest 0.13 (rustls, json, stream), `rusqlite 0.40` (features `bundled`)
   - lofty 0.25, keyring 4.2, trash 5.2, notify 8.2, walkdir 2.5, governor 0.10, oauth2 5, strsim 0.11
   - uuid (v7), serde/serde_json, thiserror, tracing, tracing-subscriber, tracing-appender, url,
     sha2, unicode-normalization, async-trait, tokio-util
-- [ ] T004 [P] Add the frontend dependencies to `package.json`: svelte 5.57, @sveltejs/kit 3, tailwindcss 4.3 + @tailwindcss/vite, bits-ui 2.19, @tanstack/svelte-virtual 3.13, @tauri-apps/api 2.12 and the matching plugin packages (dialog, opener, shell, updater), plus vitest 5, @playwright/test 1.64 and svelte-check
-- [ ] T005 [P] Configure linting and formatting:
+- [X] T004 [P] Add the frontend dependencies to `package.json`: svelte 5.57, @sveltejs/kit 3, tailwindcss 4.3 + @tailwindcss/vite, bits-ui 2.19, @tanstack/svelte-virtual 3.13, @tauri-apps/api 2.12 and the matching plugin packages (dialog, opener, shell, updater), plus vitest 5, @playwright/test 1.64 and svelte-check
+- [X] T005 [P] Configure linting and formatting:
   - `src-tauri/rustfmt.toml`;
   - `src-tauri/.cargo/config.toml` with clippy `-D warnings` in CI;
   - `eslint.config.js` and `.prettierrc` (with prettier-plugin-svelte);
   - `package.json` scripts `lint`, `format`, `check`, `test`, `test:e2e`
-- [ ] T006 [P] Configure Vitest in `vite.config.ts` (`test.include: ["src/**/*.test.ts"]`, jsdom environment) and Playwright in `playwright.config.ts` (webServer = `pnpm vite preview`, baseURL, chromium + webkit projects)
-- [ ] T007 [P] Create the CI workflow `.github/workflows/ci.yml`:
+- [X] T006 [P] Configure Vitest in `vite.config.ts` (`test.include: ["src/**/*.test.ts"]`, jsdom environment) and Playwright in `playwright.config.ts` (webServer = `pnpm vite preview`, baseURL, chromium + webkit projects)
+- [X] T007 [P] Create the CI workflow `.github/workflows/ci.yml`:
   - matrix `ubuntu-22.04`, `windows-latest`, `macos-latest`;
   - install the Linux packages `libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libsecret-1-dev`;
   - run `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm test:e2e`, `cargo clippy`, `cargo test` and `pnpm tauri build --debug`;
   - no network access is needed by the tests
-- [ ] T008 [P] Update the root `.gitignore`: add `node_modules/`, `build/`, `.svelte-kit/`, `src-tauri/target/`, `src-tauri/gen/`, `test-results/`, `playwright-report/`
-- [ ] T009 Create the Rust module skeleton from plan.md: empty `mod.rs` files for `src-tauri/src/{commands,core,platforms,tools,net,db,os}/`, declared in `src-tauri/src/lib.rs`, plus an empty `src-tauri/tests/fixtures/{spotify,youtube,soundcloud,ytdlp}/` tree with `.gitkeep`
+- [X] T008 [P] Update the root `.gitignore`: add `node_modules/`, `build/`, `.svelte-kit/`, `src-tauri/target/`, `src-tauri/gen/`, `test-results/`, `playwright-report/`
+- [X] T009 Create the Rust module skeleton from plan.md: empty `mod.rs` files for `src-tauri/src/{commands,core,platforms,tools,net,db,os}/`, declared in `src-tauri/src/lib.rs`, plus an empty `src-tauri/tests/fixtures/{spotify,youtube,soundcloud,ytdlp}/` tree with `.gitkeep`
 
 ---
 

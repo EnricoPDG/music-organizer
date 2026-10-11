@@ -63,6 +63,14 @@ Versions below were checked against crates.io, npm and GitHub releases on 2026-1
   widely used in production on Tauri 2 since 2024. Pinning plus a binding-generation check in CI
   limits the risk. Fallback: hand-written bindings checked by the same CI step.
 
+## R3a. OAuth implementation (implementation note, 2026-10-11)
+
+- **Decision**: implement PKCE (S256) and the token exchange directly on reqwest 0.13, instead of
+  using the `oauth2` crate.
+- **Rationale**: `oauth2` 5 depends on reqwest 0.12, which would compile a second HTTP stack. The
+  flow needs only a verifier and challenge, an authorize URL, and two form POSTs (constitution
+  Principle VI).
+
 ## R4. Audio source & downloading (YouTube)
 
 - **Decision**: Use **yt-dlp** (latest release 2026.08.19) as an external tool for YouTube search,

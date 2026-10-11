@@ -1,2 +1,30 @@
+# OS
 .DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Editors
+.vscode/
+.idea/
+
+# Claude Code local settings (may contain credentials)
 .claude/settings.local.json
+
+# Node / SvelteKit
+node_modules/
+build/
+dist/
+.svelte-kit/
+*.log
+.env*
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+*.rs.bk
+
+# Test output
+test-results/
+playwright-report/
+coverage/

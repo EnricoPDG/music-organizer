@@ -1,0 +1,13 @@
+node_modules/
+build/
+.svelte-kit/
+src-tauri/
+src/lib/bindings.ts
+test-results/
+playwright-report/
+coverage/
+pnpm-lock.yaml
+package-lock.json
+specs/
+.specify/
+.claude/
