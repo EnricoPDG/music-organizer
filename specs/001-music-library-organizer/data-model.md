@@ -44,7 +44,7 @@ A song in the library. A track is either downloaded by the app or scanned from a
 | file_mtime / file_size | int? | used to detect external changes (FR-019) |
 | origin | enum | `downloaded`, `scanned` |
 | status | enum | `pending`, `available`, `missing` (file gone), `failed` |
-| dedup_key | text | `norm(primary artist) + "\|" + norm(title)` + duration bucket (±3 s), indexed |
+| dedup_key | text | `norm(primary artist) + "\|" + norm(title)`, indexed. Durations are compared separately (±3 s) when looking up a match; a fixed duration bucket could split two durations 2 s apart |
 | created_at / updated_at | timestamp | |
 
 **Validation and behavior**

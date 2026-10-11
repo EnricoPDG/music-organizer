@@ -1,1 +1,1 @@
-<h1>Music Organizer</h1>
+<!-- The layout redirects to /import or /onboarding. -->

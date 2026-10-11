@@ -62,39 +62,39 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
 
 ### Tests first (must FAIL before implementation)
 
-- [ ] T010 [P] Write sanitizer tests in `src-tauri/tests/sanitize.rs`:
+- [X] T010 [P] Write sanitizer tests in `src-tauri/tests/sanitize.rs`:
   - remove `<>:"/\|?*` and control characters;
   - rename Windows reserved names `CON`, `PRN`, `AUX`, `NUL`, `COM1`–`COM9`, `LPT1`–`LPT9` (e.g. `CON` → `CON_`);
   - strip trailing dots and spaces;
   - limit each path component to 120 characters, cut on a UTF-8 character boundary;
   - limit the total path to 240 characters on Windows;
   - identical output on every OS
-- [ ] T011 [P] Write normalization and dedup-key tests in `src-tauri/tests/dedup.rs`:
+- [X] T011 [P] Write normalization and dedup-key tests in `src-tauri/tests/dedup.rs`:
   - `norm()` lower-cases the text, strips diacritics and punctuation, and removes "feat." clauses and "(Official Video)"-style suffixes;
-  - `dedup_key = norm(primary artist) + "|" + norm(title)` + duration bucket (±3 s);
-  - the same song with a ±2 s duration difference gives the same key
-- [ ] T012 [P] Write net retry and rate-limit tests in `src-tauri/tests/net.rs`, using a local mock HTTP server:
+  - `dedup_key = norm(primary artist) + "|" + norm(title)`; durations are compared separately (±3 s), because a fixed bucket can split two durations 2 s apart;
+  - the same song with a ±2 s duration difference matches
+- [X] T012 [P] Write net retry and rate-limit tests in `src-tauri/tests/net.rs`, using a local mock HTTP server:
   - retries with exponential backoff and jitter (base 1 s, maximum 5 attempts);
   - honors `Retry-After` on 429 responses;
   - `QUOTA_EXCEEDED` is treated as rate limiting;
   - timeouts give a `Network` error
-- [ ] T013 [P] Write DB migration tests in `src-tauri/tests/db.rs`:
+- [X] T013 [P] Write DB migration tests in `src-tauri/tests/db.rs`:
   - the migrations apply to an empty database;
   - they are idempotent when run again;
   - FTS5 triggers keep `track_fts` in sync on insert, update and delete;
   - the unique constraints exist: `Track.file_path`, `SourceRef(platform, platform_track_id)`, `Playlist(platform, platform_playlist_id)`, `WatchedFolder.path`
-- [ ] T014 [P] Write `Secret<T>` tests in `src-tauri/tests/secrets.rs`: the `Debug` and `Display` output is `"[REDACTED]"`, and serializing to logs never includes the inner value
+- [X] T014 [P] Write `Secret<T>` tests in `src-tauri/tests/secrets.rs`: the `Debug` and `Display` output is `"[REDACTED]"`, and serializing to logs never includes the inner value
 
 ### Implementation
 
-- [ ] T015 Implement `AppError { kind: ErrorKind, message: String, retryable: bool }` and the `From` conversions in `src-tauri/src/error.rs`. Its specta and serde derivations must match [contracts/ipc.md](./contracts/ipc.md). Messages must be safe to show to the user and never contain secrets
-- [ ] T016 [P] Implement `sanitize_component()` and `build_path()` in `src-tauri/src/core/sanitize.rs` so that T010 passes
-- [ ] T017 [P] Implement `norm()` and `dedup_key()` in `src-tauri/src/core/model.rs` so that T011 passes. Define the core types in the same file:
+- [X] T015 Implement `AppError { kind: ErrorKind, message: String, retryable: bool }` and the `From` conversions in `src-tauri/src/error.rs`. Its specta and serde derivations must match [contracts/ipc.md](./contracts/ipc.md). Messages must be safe to show to the user and never contain secrets
+- [X] T016 [P] Implement `sanitize_component()` and `build_path()` in `src-tauri/src/core/sanitize.rs` so that T010 passes
+- [X] T017 [P] Implement `norm()` and `dedup_key()` in `src-tauri/src/core/model.rs` so that T011 passes. Define the core types in the same file:
   - `NormalizedTrack`, `NormalizedCollection`, `ResourceRef`, `ResourceKind`, `FetchMode`, `UnavailableItem`, as in [contracts/platform-adapter.md](./contracts/platform-adapter.md);
   - the id newtypes, which are UUIDv7 values
-- [ ] T018 [P] Implement `Secret<T>` and the keyring wrapper (`store`, `load`, `delete` under service `music-organizer`) in `src-tauri/src/secrets.rs`. When no Secret Service is available on Linux, return `ErrorKind::CredentialStoreUnavailable`; never fall back to plaintext (research R11)
-- [ ] T019 Implement the DB layer in `src-tauri/src/db/mod.rs`: a dedicated connection thread, WAL mode, `foreign_keys=ON`, a migration runner, and async `db.call(|conn| …)` helpers
-- [ ] T020 Write the migration `src-tauri/src/db/migrations/0001_init.sql` with every table from [data-model.md](./data-model.md), using these constraints:
+- [X] T018 [P] Implement `Secret<T>` and the keyring wrapper (`store`, `load`, `delete` under service `music-organizer`) in `src-tauri/src/secrets.rs`. When no Secret Service is available on Linux, return `ErrorKind::CredentialStoreUnavailable`; never fall back to plaintext (research R11)
+- [X] T019 Implement the DB layer in `src-tauri/src/db/mod.rs`: a dedicated connection thread, WAL mode, `foreign_keys=ON`, a migration runner, and async `db.call(|conn| …)` helpers
+- [X] T020 Write the migration `src-tauri/src/db/migrations/0001_init.sql` with every table from [data-model.md](./data-model.md), using these constraints:
   - **Track**:
     - `title` "required, 1–500 chars";
     - `artists` JSON array ("≥ 1 entry");
@@ -118,13 +118,13 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - **Settings** as key/value.
   - The `track_fts` FTS5 table with its triggers, and the `artist_view` and `album_view` SQL views.
   T013 must pass afterwards.
-- [ ] T021 [P] Implement the net layer in `src-tauri/src/net/mod.rs`: a shared reqwest client with timeouts, a governor rate limiter per platform, and a retry policy that honors `Retry-After`. T012 must pass
-- [ ] T022 [P] Implement the `ToolRunner` trait in `src-tauri/src/tools/mod.rs`. It runs a tool with arguments and gets JSON or streamed progress back, with cancellation. Also implement `FakeToolRunner`, which replays fixture files from `src-tauri/tests/fixtures/ytdlp/`, for tests
-- [ ] T023 Implement the `PlatformAdapter` trait in `src-tauri/src/platforms/mod.rs`, exactly as in [contracts/platform-adapter.md](./contracts/platform-adapter.md):
+- [X] T021 [P] Implement the net layer in `src-tauri/src/net/mod.rs`: a shared reqwest client with timeouts, a governor rate limiter per platform, and a retry policy that honors `Retry-After`. T012 must pass
+- [X] T022 [P] Implement the `ToolRunner` trait in `src-tauri/src/tools/mod.rs`. It runs a tool with arguments and gets JSON or streamed progress back, with cancellation. Also implement `FakeToolRunner`, which replays fixture files from `src-tauri/tests/fixtures/ytdlp/`, for tests
+- [X] T023 Implement the `PlatformAdapter` trait in `src-tauri/src/platforms/mod.rs`, exactly as in [contracts/platform-adapter.md](./contracts/platform-adapter.md):
   - `Capabilities`, `AdapterError`, `AdapterCtx` (http, tools, token, cancel);
   - `registry()`, which returns `Vec<Arc<dyn PlatformAdapter>>`;
   - `resolve(url)`, which asks each adapter's `parse_url`
-- [ ] T024 Implement the shared `adapter_contract_suite!` macro in `src-tauri/tests/common/contract.rs`. It checks the contract's behavioral rules 1–7:
+- [X] T024 Implement the shared `adapter_contract_suite!` macro in `src-tauri/tests/common/contract.rs`. It checks the contract's behavioral rules 1–7:
   - `parse_url` is pure and rejects other platforms' URLs;
   - `fetch_collection` returns all pages in order and puts unavailable items in `unavailable`;
   - every track has a non-empty title and ≥ 1 artist;
@@ -132,25 +132,25 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - adapters never write anything;
   - all I/O goes through `ctx`;
   - a 429 becomes `RateLimited`
-- [ ] T025 [P] Implement the OS helpers in `src-tauri/src/os/mod.rs`: app data, log and cache directories; `reveal_in_folder` and `open_with_default` through tauri-plugin-opener; and the system reduced-motion and theme queries
-- [ ] T026 [P] Set up logging in `src-tauri/src/logging.rs`: tracing with a rolling file appender in the app log directory, plus a redaction layer that masks `access_token`, `refresh_token`, `client_secret`, `code` and `Authorization` values
-- [ ] T027 Implement the settings repository and commands `get_settings` and `update_settings` in `src-tauri/src/commands/settings.rs`, with the defaults from data-model.md:
+- [X] T025 [P] Implement the OS helpers in `src-tauri/src/os/mod.rs`: app data, log and cache directories; `reveal_in_folder` and `open_with_default` through tauri-plugin-opener; and the system reduced-motion and theme queries
+- [X] T026 [P] Set up logging in `src-tauri/src/logging.rs`: tracing with a rolling file appender in the app log directory, plus a redaction layer that masks `access_token`, `refresh_token`, `client_secret`, `code` and `Authorization` values
+- [X] T027 Implement the settings repository and commands `get_settings` and `update_settings` in `src-tauri/src/commands/settings.rs`, with the defaults from data-model.md:
   - `audio_format` = `m4a`;
   - `naming_pattern` = `{album_artist}/{album}/{track:02} - {title}`;
   - `theme` = `system`;
   - `reduce_motion` follows the OS;
   - `max_parallel_downloads` = `3`, "(1–5)";
   - `review_low_confidence` = `true`
-- [ ] T028 Wire up `src-tauri/src/lib.rs`: plugins, managed state (Db, registry, net, tools, queue placeholder), and tauri-specta command and event collection. In debug builds, export the TypeScript bindings to `src/lib/bindings.ts`. Add the script `pnpm bindings` and a CI step that fails if `git diff --exit-code src/lib/bindings.ts` shows changes
-- [ ] T029 [P] Build the frontend theme and design tokens in `src/app.css`:
+- [X] T028 Wire up `src-tauri/src/lib.rs`: plugins, managed state (Db, registry, net, tools, queue placeholder), and tauri-specta command and event collection. In debug builds, export the TypeScript bindings to `src/lib/bindings.ts`. Add the script `pnpm bindings` and a CI step that fails if `git diff --exit-code src/lib/bindings.ts` shows changes
+- [X] T029 [P] Build the frontend theme and design tokens in `src/app.css`:
   - Tailwind 4 `@theme` with CSS variables for the light and dark palettes;
   - the type scale and radii;
   - a `prefers-reduced-motion` and `.reduce-motion` override;
   - animations limited to `transform` and `opacity` (research R1, Linux WebKitGTK)
-- [ ] T030 [P] Create the base UI components in `src/lib/components/`, built on Bits UI where it applies: `Button.svelte`, `Badge.svelte` (high/medium/low variants), `Dialog.svelte`, `Toast.svelte`, `ProgressBar.svelte`, `EmptyState.svelte`, `ArtworkImg.svelte` (lazy, with a fade-in)
-- [ ] T031 Create the app shell `src/routes/+layout.svelte`: a sidebar with Import, Queue, Review, Library, Organize and Settings; theme handling (system, light or dark, from settings); the toast host; and route transitions that respect reduce motion
-- [ ] T032 [P] Create the typed API layer `src/lib/api/index.ts`, which re-exports the generated commands and maps `AppError` to toasts. Add `src/lib/api/events.ts`, with typed subscribe helpers for every event in contracts/ipc.md that unsubscribe automatically when a component is destroyed
-- [ ] T033 Implement the first-run onboarding and music-folder selection. It adds a `WatchedFolder` with `is_download_target = true` through `add_watched_folder`, which is implemented minimally in `src-tauri/src/commands/library.rs`. The route is `src/routes/onboarding/+page.svelte`, and the layout redirects there when no download target exists
+- [X] T030 [P] Create the base UI components in `src/lib/components/`, built on Bits UI where it applies: `Button.svelte`, `Badge.svelte` (high/medium/low variants), `Dialog.svelte`, `Toast.svelte`, `ProgressBar.svelte`, `EmptyState.svelte`, `ArtworkImg.svelte` (lazy, with a fade-in)
+- [X] T031 Create the app shell `src/routes/+layout.svelte`: a sidebar with Import, Queue, Review, Library, Organize and Settings; theme handling (system, light or dark, from settings); the toast host; and route transitions that respect reduce motion
+- [X] T032 [P] Create the typed API layer `src/lib/api/index.ts`, which re-exports the generated commands and maps `AppError` to toasts. Add `src/lib/api/events.ts`, with typed subscribe helpers for every event in contracts/ipc.md that unsubscribe automatically when a component is destroyed
+- [X] T033 Implement the first-run onboarding and music-folder selection. It adds a `WatchedFolder` with `is_download_target = true` through `add_watched_folder`, which is implemented minimally in `src-tauri/src/commands/library.rs`. The route is `src/routes/onboarding/+page.svelte`, and the layout redirects there when no download target exists
 
 **Checkpoint**: the foundation is ready; user stories can start
 

@@ -48,6 +48,11 @@ Versions below were checked against crates.io, npm and GitHub releases on 2026-1
     supports it.
 - **Rationale**: Svelte compiles to small, fast code with no virtual-DOM overhead, which helps most
   on WebKitGTK. Runes make shared state for the download queue simple.
+- **Implementation note (2026-10-11)**: SvelteKit 3 reads its config from the `sveltekit()` Vite
+  plugin (no `svelte.config.js`) and replaces the `$lib` alias with Node subpath imports
+  (`#lib/*` in `package.json`). Imports of `.ts` files use explicit extensions.
+- **Typeface**: Bricolage Grotesque (variable, bundled locally through Fontsource), so the app
+  works offline and the CSP stays `'self'`.
 - **Alternatives considered**: React with shadcn/ui has a larger ecosystem but more runtime overhead
   and boilerplate. SolidJS is fast but has a smaller component ecosystem.
 
