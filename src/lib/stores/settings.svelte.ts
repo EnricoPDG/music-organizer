@@ -24,6 +24,10 @@ export async function loadSettings(): Promise<void> {
 		settings.value = s;
 		applyAppearance(s);
 	}
+	// Re-enable transitions after the theme has been painted.
+	requestAnimationFrame(() =>
+		requestAnimationFrame(() => document.documentElement.classList.remove('booting'))
+	);
 }
 
 export async function updateSettings(patch: SettingsPatch): Promise<void> {

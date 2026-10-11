@@ -53,6 +53,9 @@ Versions below were checked against crates.io, npm and GitHub releases on 2026-1
   (`#lib/*` in `package.json`). Imports of `.ts` files use explicit extensions.
 - **Typeface**: Bricolage Grotesque (variable, bundled locally through Fontsource), so the app
   works offline and the CSP stays `'self'`.
+- **Virtualization (implementation note)**: lists use `@tanstack/virtual-core` driven directly
+  by Svelte 5 runes. The `@tanstack/svelte-virtual` store wrapper re-applied its initial options
+  whenever it gained a first subscriber, which caused an effect loop in production builds.
 - **Alternatives considered**: React with shadcn/ui has a larger ecosystem but more runtime overhead
   and boilerplate. SolidJS is fast but has a smaller component ecosystem.
 
@@ -103,6 +106,19 @@ Versions below were checked against crates.io, npm and GitHub releases on 2026-1
 - **Licensing**: yt-dlp is under the Unlicense and Deno under MIT. FFmpeg uses LGPL builds, so the
   app can use them without being bound by the GPL.
 
+### R4 implementation notes (2026-10-11)
+
+- **FFmpeg is optional, not auto-installed.** The LGPL FFmpeg builds (BtbN) are rolling daily
+  releases that expire, so there's nothing stable to pin a checksum to, and there's no maintained
+  LGPL build for macOS. The app therefore auto-installs only yt-dlp and Deno, from
+  `src-tauri/src/tools/manifest.json`, with SHA-256 digests taken from the GitHub release assets
+  on 2026-10-11. The default M4A format takes YouTube's AAC stream directly (`-f ba[ext=m4a]`)
+  and needs no FFmpeg. Opus and MP3 need a system FFmpeg (Homebrew, winget, apt) or a
+  user-chosen path, and are disabled in Settings until one is found.
+- **yt-dlp updates** use yt-dlp's own verified self-updater (`-U`), at most weekly.
+- **No Tauri shell plugin.** The Rust core starts the tools itself with `tokio::process`, so
+  the web UI has no permission to launch processes.
+
 ## R5. Audio format & tagging
 
 - **Decision**:
@@ -147,6 +163,9 @@ All adapters implement the same `PlatformAdapter` contract
   runs a temporary local HTTP listener in Rust and opens the system browser. This is supported by
   Google, Spotify (loopback IP literal) and SoundCloud, and needs no custom URL scheme
   registration on each system.
+- **Fixed redirect port (implementation note)**: some platforms require the redirect URI to
+  match exactly, port included. Sign-in therefore listens on `127.0.0.1:43117`, and the setup
+  guide shows the exact URI to register: `http://127.0.0.1:43117/callback`.
 - **Known constraint**: Google OAuth apps in "testing" status issue refresh tokens for sensitive
   scopes such as `youtube.readonly` that expire after 7 days. The app detects an expired sign-in
   and asks the user to reconnect (spec edge case); public playlists keep working.

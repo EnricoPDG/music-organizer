@@ -7,6 +7,7 @@
 	import { attempt, commands } from '#lib/api/index.ts';
 	import Icon, { type IconName } from '#lib/components/Icon.svelte';
 	import Toaster from '#lib/components/Toaster.svelte';
+	import { startQueueSync } from '#lib/stores/queue.svelte.ts';
 	import { applyAppearance, loadSettings } from '#lib/stores/settings.svelte.ts';
 	import { ms } from '#lib/utils/motion.ts';
 
@@ -32,6 +33,7 @@
 			if (!hasTarget && page.url.pathname !== '/onboarding') await goto(resolve('/onboarding'));
 			else if (page.url.pathname === '/') await goto(resolve('/import'));
 			ready = true;
+			startQueueSync();
 		})();
 	});
 

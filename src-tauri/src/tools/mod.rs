@@ -2,6 +2,8 @@
 //! can replay recorded output with [`fake::FakeToolRunner`] instead of running real processes.
 
 pub mod fake;
+pub mod manager;
+pub mod process;
 
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
@@ -60,6 +62,11 @@ impl From<ToolError> for crate::error::AppError {
 /// process.
 #[async_trait]
 pub trait ToolRunner: Send + Sync {
+    /// Whether the tool can be run (installed, or a usable override).
+    fn available(&self, _tool: Tool) -> bool {
+        true
+    }
+
     /// Run to completion and parse stdout as one JSON document.
     async fn run_json(
         &self,

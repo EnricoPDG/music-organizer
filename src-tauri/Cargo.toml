@@ -27,7 +27,6 @@ tauri-build = { version = "2.7", features = [] }
 tauri = { version = "2.12", features = ["protocol-asset"] }
 tauri-plugin-dialog = "2.8"
 tauri-plugin-opener = "2.7"
-tauri-plugin-shell = "2.5"
 tauri-plugin-updater = "2.13"
 specta = { version = "=2.0.0-rc.25", features = ["derive", "uuid"] }
 specta-typescript = "=0.0.12"
@@ -45,6 +44,7 @@ keyring = "4.2"
 trash = "5.2"
 notify = "8.2"
 walkdir = "2.5"
+zip = { version = "9", default-features = false, features = ["deflate"] }
 strsim = "0.11"
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
 

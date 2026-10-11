@@ -12,15 +12,17 @@ pub mod secrets;
 pub mod state;
 pub mod tools;
 
+use crate::core::queue::{BatchSummary, JobProgress, Queue, QueueConfig, QueueEvents};
 use crate::state::AppState;
-use std::sync::Arc;
-use tauri::Manager;
+use crate::tools::manager::{ToolLocator, ToolManager};
+use std::sync::{Arc, Mutex};
+use tauri::{AppHandle, Emitter, Manager};
 use tauri_specta::{Builder, ErrorHandlingMode, collect_commands};
 
 /// Where the generated TypeScript bindings are written (contracts/ipc.md).
 pub const BINDINGS_PATH: &str = "../src/lib/bindings.ts";
 
-/// Every IPC command and event. TypeScript bindings are generated from this.
+/// Every IPC command, plus the payload types of events. TypeScript bindings are generated from this.
 pub fn specta_builder() -> Builder<tauri::Wry> {
     Builder::<tauri::Wry>::new()
         .error_handling(ErrorHandlingMode::Throw)
@@ -29,7 +31,24 @@ pub fn specta_builder() -> Builder<tauri::Wry> {
             commands::settings::update_settings,
             commands::library::list_watched_folders,
             commands::library::add_watched_folder,
+            commands::import::resolve_link,
+            commands::import::start_import,
+            commands::import::list_my_collections,
+            commands::jobs::list_batches,
+            commands::jobs::list_jobs,
+            commands::jobs::pause_jobs,
+            commands::jobs::resume_jobs,
+            commands::jobs::cancel_jobs,
+            commands::jobs::retry_jobs,
+            commands::accounts::list_accounts,
+            commands::accounts::connect_account,
+            commands::accounts::disconnect_account,
+            commands::tools::tools_status,
+            commands::tools::install_tools,
+            commands::tools::set_tool_paths,
         ])
+        .typ::<JobProgress>()
+        .typ::<BatchSummary>()
 }
 
 pub fn export_bindings(builder: &Builder<tauri::Wry>) {
@@ -43,6 +62,24 @@ pub fn export_bindings(builder: &Builder<tauri::Wry>) {
         .expect("failed to export TypeScript bindings");
 }
 
+/// Forwards queue events to the UI (contracts/ipc.md, Events).
+struct TauriEvents(AppHandle);
+
+impl QueueEvents for TauriEvents {
+    fn progress(&self, items: Vec<JobProgress>) {
+        let _ = self.0.emit("job://progress", items);
+    }
+    fn summary(&self, summary: BatchSummary) {
+        let _ = self.0.emit("batch://summary", summary);
+    }
+    fn library_changed(&self) {
+        let _ = self.0.emit(
+            "library://changed",
+            serde_json::json!({ "scope": "tracks" }),
+        );
+    }
+}
+
 pub fn run() {
     let builder = specta_builder();
     #[cfg(debug_assertions)]
@@ -51,7 +88,6 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_shell::init())
         .invoke_handler(builder.invoke_handler())
         .setup(move |app| {
             builder.mount_events(app);
@@ -61,15 +97,47 @@ pub fn run() {
             tracing::info!(version = env!("CARGO_PKG_VERSION"), "starting");
 
             let db = db::Db::open(&dirs.data.join("library.db"))?;
+            let settings =
+                tauri::async_runtime::block_on(db.call(|c| commands::settings::load(c)))?;
             let net = Arc::new(net::Net::new(net::RetryPolicy::default()));
-            let tools: Arc<dyn tools::ToolRunner> = Arc::new(tools::fake::FakeToolRunner::new());
-            let registry = Arc::new(platforms::registry());
+            let locator = Arc::new(ToolLocator::new(
+                dirs.data.join("tools"),
+                settings.tool_paths,
+            ));
+            let tools: Arc<dyn tools::ToolRunner> =
+                Arc::new(tools::process::ProcessRunner::new(locator.clone()));
+            let tool_manager = Arc::new(ToolManager::new(locator, net.clone()));
+            let events = Arc::new(TauriEvents(app.handle().clone()));
+            let queue = Queue::new(
+                db.clone(),
+                tools.clone(),
+                net.clone(),
+                dirs.cache.clone(),
+                events,
+                QueueConfig::default(),
+            );
+
             app.manage(AppState {
                 db,
                 net,
-                tools,
-                registry,
+                tools: tools.clone(),
+                tool_manager: tool_manager.clone(),
+                registry: Arc::new(platforms::registry()),
+                secrets: Arc::new(secrets::KeyringStore),
+                queue: queue.clone(),
                 dirs,
+                previews: Mutex::new(Default::default()),
+            });
+
+            // Resume interrupted work, then keep yt-dlp current in the background.
+            tauri::async_runtime::spawn(async move {
+                if let Err(e) = queue.recover().await {
+                    tracing::error!(error = %e, "queue recovery failed");
+                }
+                queue.start();
+                if let Err(e) = tool_manager.update_yt_dlp(tools.as_ref(), false).await {
+                    tracing::warn!(error = %e, "yt-dlp update check failed");
+                }
             });
             Ok(())
         })

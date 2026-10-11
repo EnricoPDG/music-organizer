@@ -11,9 +11,38 @@ export const commands = {
 	updateSettings: (patch: SettingsPatch) => __TAURI_INVOKE<Settings>("update_settings", { patch }),
 	listWatchedFolders: () => __TAURI_INVOKE<WatchedFolder[]>("list_watched_folders"),
 	addWatchedFolder: (path: string, isDownloadTarget: boolean) => __TAURI_INVOKE<WatchedFolder>("add_watched_folder", { path, isDownloadTarget }),
+	resolveLink: (url: string) => __TAURI_INVOKE<LinkPreview>("resolve_link", { url }),
+	startImport: (url: string, autoDownload: boolean) => __TAURI_INVOKE<ImportStarted>("start_import", { url, autoDownload }),
+	listMyCollections: (platform: string) => __TAURI_INVOKE<CollectionSummary[]>("list_my_collections", { platform }),
+	listBatches: () => __TAURI_INVOKE<BatchView[]>("list_batches"),
+	listJobs: (batchId: string | null) => __TAURI_INVOKE<JobView[]>("list_jobs", { batchId }),
+	pauseJobs: (jobIds: string[] | null, batchId: string | null) => __TAURI_INVOKE<number>("pause_jobs", { jobIds, batchId }),
+	resumeJobs: (jobIds: string[] | null, batchId: string | null) => __TAURI_INVOKE<number>("resume_jobs", { jobIds, batchId }),
+	cancelJobs: (jobIds: string[] | null, batchId: string | null) => __TAURI_INVOKE<number>("cancel_jobs", { jobIds, batchId }),
+	retryJobs: (jobIds: string[] | null, batchId: string | null) => __TAURI_INVOKE<number>("retry_jobs", { jobIds, batchId }),
+	listAccounts: () => __TAURI_INVOKE<AccountStatus[]>("list_accounts"),
+	/**  Open the platform's sign-in page in the browser and wait for the loopback redirect. */
+	connectAccount: (platform: string, clientId: string, clientSecret: string | null) => __TAURI_INVOKE<AccountStatus>("connect_account", { platform, clientId, clientSecret }),
+	/**  Remove the account and its credentials from this computer (FR-004a). */
+	disconnectAccount: (platform: string) => __TAURI_INVOKE<null>("disconnect_account", { platform }),
+	toolsStatus: () => __TAURI_INVOKE<ToolsStatus>("tools_status"),
+	/**  Install missing tools, emitting `tools://status` with a progress message per step. */
+	installTools: () => __TAURI_INVOKE<ToolsStatus>("install_tools"),
+	/**  Save custom tool paths and apply them immediately. */
+	setToolPaths: (paths: ToolPaths) => __TAURI_INVOKE<ToolsStatus>("set_tool_paths", { paths }),
 };
 
 /* Types */
+export type AccountStatus = {
+	platform: string,
+	platformName: string,
+	/**  `connected`, `expired`, `error`, or `disconnected`. */
+	status: string,
+	displayName: string | null,
+	clientId: string | null,
+	connectedAt: string | null,
+};
+
 export type AppError = {
 	kind: ErrorKind,
 	message: string,
@@ -22,7 +51,101 @@ export type AppError = {
 
 export type AudioFormat = "m4a" | "opus" | "mp3";
 
+export type BatchSummary = {
+	batchId: string,
+	total: number,
+	done: number,
+	failed: number,
+	skipped: number,
+	active: number,
+};
+
+export type BatchView = {
+	batchId: string,
+	name: string,
+	platform: string | null,
+	createdAt: string,
+	finishedAt: string | null,
+	total: number,
+	done: number,
+	failed: number,
+	skipped: number,
+	active: number,
+};
+
+export type CollectionSummary = {
+	platform: string,
+	kind: ResourceKind,
+	id: string,
+	url: string,
+	name: string,
+	trackCount: number | null,
+	artworkUrl: string | null,
+};
+
 export type ErrorKind = "invalid_url" | "unsupported_platform" | "private" | "public_source_changed" | "not_found" | "rate_limited" | "network" | "auth_expired" | "not_connected" | "credential_store_unavailable" | "tool_missing" | "disk_full" | "invalid_input" | "conflict" | "platform" | "internal";
+
+export type FetchMode = "official" | "public_fallback";
+
+export type ImportStarted = {
+	batchId: string,
+	playlistId: string | null,
+	created: number,
+	existing: number,
+	queued: number,
+	skipped: number,
+};
+
+export type JobProgress = {
+	jobId: string,
+	trackId: string,
+	batchId: string,
+	state: string,
+	progress: number | null,
+	errorKind: string | null,
+	errorMessage: string | null,
+};
+
+export type JobView = {
+	jobId: string,
+	batchId: string,
+	trackId: string,
+	title: string,
+	artists: string[],
+	album: string | null,
+	artworkUrl: string | null,
+	state: string,
+	progress: number | null,
+	errorKind: string | null,
+	errorMessage: string | null,
+	confidenceLevel: string | null,
+	filePath: string | null,
+};
+
+export type LinkPreview = {
+	url: string,
+	platform: string,
+	platformName: string,
+	kind: ResourceKind,
+	name: string,
+	owner: string | null,
+	artworkUrl: string | null,
+	trackCount: number,
+	unavailableCount: number,
+	/**  `public_fallback` = best-effort public Spotify page (FR-004b). */
+	fetchMode: FetchMode,
+	signedIn: boolean,
+	/**  First tracks, for the preview card. */
+	sample: PreviewTrack[],
+};
+
+export type PreviewTrack = {
+	title: string,
+	artists: string[],
+	durationMs: number | null,
+};
+
+export type ResourceKind = "track" | "playlist" | "album" | "user_likes" | "artist";
 
 export type Settings = {
 	audioFormat: AudioFormat,
@@ -54,10 +177,31 @@ export type SettingsPatch = {
 
 export type Theme = "system" | "light" | "dark";
 
+export type Tool = "ytDlp" | "deno" | "ffmpeg";
+
+export type ToolInfo = {
+	tool: Tool,
+	installed: boolean,
+	version: string | null,
+	path: string | null,
+	/**  Installed by the app (true) or found on the system / chosen by the user (false). */
+	managed: boolean,
+	/**  The app can install this tool itself. */
+	installable: boolean,
+};
+
 export type ToolPaths = {
 	ytDlp: string | null,
 	deno: string | null,
 	ffmpeg: string | null,
+};
+
+export type ToolsStatus = {
+	tools: ToolInfo[],
+	/**  Required tools (yt-dlp and Deno) are present. */
+	ready: boolean,
+	installing: boolean,
+	message: string | null,
 };
 
 export type WatchedFolder = {

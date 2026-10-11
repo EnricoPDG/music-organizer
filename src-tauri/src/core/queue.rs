@@ -200,13 +200,19 @@ fn sanitize_value(s: &str) -> String {
 }
 
 /// yt-dlp arguments to download `video_id` as `format` into `out_template` (research R4, R5).
-pub fn download_args(video_id: &str, format: AudioFormat, out_template: &str) -> Vec<String> {
-    let mut args: Vec<String> = match format {
-        // Keep YouTube's AAC stream as-is when it exists.
-        AudioFormat::M4a => vec!["-f", "ba[ext=m4a]/ba", "-x", "--audio-format", "m4a"],
-        AudioFormat::Opus => vec!["-f", "ba[acodec=opus]/ba", "-x", "--audio-format", "opus"],
+/// M4A works without FFmpeg by taking YouTube's AAC stream as-is; Opus and MP3 need FFmpeg.
+pub fn download_args(
+    video_id: &str,
+    format: AudioFormat,
+    out_template: &str,
+    has_ffmpeg: bool,
+) -> Vec<String> {
+    let mut args: Vec<String> = match (format, has_ffmpeg) {
+        (AudioFormat::M4a, false) => vec!["-f", "ba[ext=m4a]"],
+        (AudioFormat::M4a, true) => vec!["-f", "ba[ext=m4a]/ba", "-x", "--audio-format", "m4a"],
+        (AudioFormat::Opus, _) => vec!["-f", "ba[acodec=opus]/ba", "-x", "--audio-format", "opus"],
         // MP3 re-encodes (the UI says so).
-        AudioFormat::Mp3 => vec![
+        (AudioFormat::Mp3, _) => vec![
             "-f",
             "ba",
             "-x",
@@ -654,7 +660,14 @@ impl Queue {
             .join(format!("{}.%(ext)s", job.id))
             .to_string_lossy()
             .to_string();
-        let args = download_args(&video, settings.audio_format, &template);
+        let has_ffmpeg = self.inner.tools.available(Tool::Ffmpeg);
+        if settings.audio_format != AudioFormat::M4a && !has_ffmpeg {
+            return Err(JobError::new(
+                "tool_missing",
+                "Opus and MP3 need FFmpeg. Install FFmpeg, or switch to M4A in Settings.",
+            ));
+        }
+        let args = download_args(&video, settings.audio_format, &template, has_ffmpeg);
         let me = self.clone();
         let job_for_progress = JobRow {
             id: job.id.clone(),
@@ -1252,10 +1265,16 @@ mod tests {
 
     #[test]
     fn download_args_keep_original_quality_for_m4a() {
-        let a = download_args("dQw4w9WgXcQ", AudioFormat::M4a, "/tmp/j.%(ext)s");
+        let a = download_args("dQw4w9WgXcQ", AudioFormat::M4a, "/tmp/j.%(ext)s", false);
+        assert!(a.windows(2).any(|w| w[0] == "-f" && w[1] == "ba[ext=m4a]"));
         assert!(
-            a.windows(2)
-                .any(|w| w[0] == "-f" && w[1] == "ba[ext=m4a]/ba")
+            !a.contains(&"-x".to_string()),
+            "no FFmpeg: no extraction step"
+        );
+        let b = download_args("dQw4w9WgXcQ", AudioFormat::Mp3, "/tmp/j.%(ext)s", true);
+        assert!(
+            b.windows(2)
+                .any(|w| w[0] == "--audio-format" && w[1] == "mp3")
         );
         assert_eq!(
             a.last().unwrap(),

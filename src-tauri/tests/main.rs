@@ -16,6 +16,7 @@ mod importer;
 mod matcher;
 mod matcher_accuracy;
 mod net;
+mod oauth;
 mod queue;
 mod sanitize;
 mod secrets;

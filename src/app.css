@@ -84,6 +84,13 @@
 }
 
 @layer base {
+	/* No color transitions until the saved theme is applied, so startup doesn't flash. */
+	.booting *,
+	.booting *::before,
+	.booting *::after {
+		transition: none !important;
+	}
+
 	html,
 	body {
 		height: 100%;

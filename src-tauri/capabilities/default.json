@@ -9,6 +9,6 @@
     "dialog:allow-save",
     "dialog:allow-message",
     "dialog:allow-ask",
-    "opener:allow-open-url"
+    "opener:default"
   ]
 }

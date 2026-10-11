@@ -27,13 +27,14 @@ Rationale and alternatives are in [research.md](./research.md) (R1–R4).
 the UI
 
 **Primary Dependencies**:
-- **Backend (Rust)**: Tauri 2.12 (plugins: dialog, opener, shell, updater), tauri-specta 2.0.0-rc.25
+- **Backend (Rust)**: Tauri 2.12 (plugins: dialog, opener, updater), tauri-specta 2.0.0-rc.25
   (pinned), tokio 1.53, reqwest 0.13, rusqlite 0.40 (bundled, FTS5), lofty 0.25, keyring 4.2,
-  trash 5.2, notify 8.2, walkdir 2.5, governor 0.10, oauth2 5, strsim 0.11.
+  trash 5.2, notify 8.2, walkdir 2.5, governor 0.10, strsim 0.11, zip 9.
+  OAuth is implemented on reqwest (research R3a).
 - **Frontend**: SvelteKit 3 (adapter-static, SPA mode), Svelte 5.57, Tailwind CSS 4.3, Bits UI 2.19,
-  @tanstack/svelte-virtual 3.13, Vite 8.
-- **External tools**: yt-dlp ≥ 2026.08.19, Deno 2.9 and FFmpeg (LGPL build). The app installs and
-  updates these itself (research R4).
+  @tanstack/virtual-core 3.19, Vite 8.
+- **External tools**: yt-dlp ≥ 2026.08.19 and Deno 2.9, which the app installs and updates itself.
+  FFmpeg is optional and only needed for Opus/MP3 (research R4 implementation notes).
 
 **Storage**: SQLite (WAL + FTS5) in the app data folder, artwork cache on disk, and audio files in
 user folders. Tokens are kept in the OS credential store.

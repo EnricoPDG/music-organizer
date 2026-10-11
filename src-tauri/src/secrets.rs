@@ -83,3 +83,53 @@ pub fn delete(key: &str) -> Result<(), SecretStoreError> {
         Err(e) => Err(e.into()),
     }
 }
+
+/// Where secrets are kept. The app uses [`KeyringStore`]; tests use [`MemoryStore`].
+pub trait SecretStore: Send + Sync {
+    fn store(&self, key: &str, value: &Secret<String>) -> Result<(), SecretStoreError>;
+    fn load(&self, key: &str) -> Result<Option<Secret<String>>, SecretStoreError>;
+    fn delete(&self, key: &str) -> Result<(), SecretStoreError>;
+}
+
+/// The OS credential store (macOS Keychain, Windows Credential Manager, Linux Secret Service).
+#[derive(Default)]
+pub struct KeyringStore;
+
+impl SecretStore for KeyringStore {
+    fn store(&self, key: &str, value: &Secret<String>) -> Result<(), SecretStoreError> {
+        store(key, value)
+    }
+    fn load(&self, key: &str) -> Result<Option<Secret<String>>, SecretStoreError> {
+        load(key)
+    }
+    fn delete(&self, key: &str) -> Result<(), SecretStoreError> {
+        delete(key)
+    }
+}
+
+/// In-memory store for tests.
+#[derive(Default)]
+pub struct MemoryStore(std::sync::Mutex<std::collections::HashMap<String, String>>);
+
+impl SecretStore for MemoryStore {
+    fn store(&self, key: &str, value: &Secret<String>) -> Result<(), SecretStoreError> {
+        self.0
+            .lock()
+            .expect("store lock")
+            .insert(key.into(), value.expose().clone());
+        Ok(())
+    }
+    fn load(&self, key: &str) -> Result<Option<Secret<String>>, SecretStoreError> {
+        Ok(self
+            .0
+            .lock()
+            .expect("store lock")
+            .get(key)
+            .cloned()
+            .map(Secret::new))
+    }
+    fn delete(&self, key: &str) -> Result<(), SecretStoreError> {
+        self.0.lock().expect("store lock").remove(key);
+        Ok(())
+    }
+}

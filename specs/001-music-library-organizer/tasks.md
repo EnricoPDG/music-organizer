@@ -200,13 +200,13 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - the final path comes from the naming pattern and `sanitize`;
   - no file appears at the final path until the rename;
   - name collisions get ` (2)` added, never an overwrite
-- [ ] T043 [P] [US1] Write OAuth loopback tests in `src-tauri/tests/oauth.rs`:
+- [X] T043 [P] [US1] Write OAuth loopback tests in `src-tauri/tests/oauth.rs`:
   - the PKCE verifier and challenge are generated;
   - the listener binds to `127.0.0.1` on a random port;
   - the state is validated, and a mismatch is rejected;
   - the listener times out after 5 minutes;
   - tokens are stored only through `secrets.rs`
-- [ ] T044 [P] [US1] Write the Playwright import flow `e2e/import.spec.ts`, using mocked IPC (`@tauri-apps/api/mocks`):
+- [X] T044 [P] [US1] Write the Playwright import flow `e2e/import.spec.ts`, using mocked IPC (`@tauri-apps/api/mocks`):
   - paste a link, see the preview card, start the import;
   - the queue rows advance as mocked `job://progress` events arrive;
   - a failed row shows its reason and a Retry action;
@@ -214,14 +214,14 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
 
 ### Implementation for User Story 1
 
-- [ ] T045 [US1] Implement the tool manager in `src-tauri/src/tools/manager.rs`:
+- [X] T045 [US1] Implement the tool manager in `src-tauri/src/tools/manager.rs`:
   - install yt-dlp (≥ 2026.08.19), Deno 2.9 and an LGPL FFmpeg build for the current OS and architecture into `<app data>/tools/`;
   - verify SHA-256 checksums against a pinned manifest `src-tauri/src/tools/manifest.json`;
   - update yt-dlp weekly or after an extractor failure;
   - let the user override a tool's path;
   - emit `tools://status`.
   Also add the commands `tools_status` and `install_tools` in `src-tauri/src/commands/tools.rs`
-- [ ] T046 [US1] Implement the real yt-dlp `ToolRunner` in `src-tauri/src/tools/ytdlp.rs`:
+- [X] T046 [US1] Implement the real yt-dlp `ToolRunner` in `src-tauri/src/tools/ytdlp.rs`:
   - pass `--js-runtimes deno:<path>` and `--ffmpeg-location`;
   - build the commands for flat playlist JSON, `ytsearch10:` JSON, and audio download in the format chosen in settings (m4a: `-f ba[ext=m4a]`, no re-encode; opus: `-f ba[acodec=opus]`, remuxed; mp3: `-x --audio-format mp3`);
   - parse `--progress-template` output into progress values
@@ -250,21 +250,21 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - pause on network loss with a "waiting for network" status;
   - throttled `job://progress` and `batch://summary` events.
   T040 and T042 must pass
-- [ ] T055 [US1] Implement the import commands `resolve_link`, `start_import` and `list_my_collections` in `src-tauri/src/commands/import.rs`, and the job commands `list_jobs`, `pause_jobs`, `resume_jobs`, `cancel_jobs` and `retry_jobs` in `src-tauri/src/commands/jobs.rs`, as in [contracts/ipc.md](./contracts/ipc.md)
-- [ ] T056 [US1] Implement the OAuth loopback flow in `src-tauri/src/net/oauth.rs` (oauth2 5, PKCE, a temporary `127.0.0.1` listener, opening the system browser, 5-minute timeout) so that T043 passes. Add the account commands `list_accounts`, `connect_account` and `disconnect_account` in `src-tauri/src/commands/accounts.rs`:
+- [X] T055 [US1] Implement the import commands `resolve_link`, `start_import` and `list_my_collections` in `src-tauri/src/commands/import.rs`, and the job commands `list_jobs`, `pause_jobs`, `resume_jobs`, `cancel_jobs` and `retry_jobs` in `src-tauri/src/commands/jobs.rs`, as in [contracts/ipc.md](./contracts/ipc.md)
+- [X] T056 [US1] Implement the OAuth loopback flow in `src-tauri/src/net/oauth.rs` (oauth2 5, PKCE, a temporary `127.0.0.1` listener, opening the system browser, 5-minute timeout) so that T043 passes. Add the account commands `list_accounts`, `connect_account` and `disconnect_account` in `src-tauri/src/commands/accounts.rs`:
   - only a key reference is stored in `ConnectedAccount.keyring_key`;
   - disconnecting deletes the keyring entry and the database row (FR-004a);
   - when a token expires, set `status = expired` and emit `account://status`
-- [ ] T057 [P] [US1] Build the queue state store `src/lib/stores/queue.svelte.ts` with Svelte 5 runes. It subscribes to `job://progress` and `batch://summary`, keeps jobs keyed by id, and batches UI updates with `requestAnimationFrame`
-- [ ] T058 [US1] Build the Import screen `src/routes/import/+page.svelte`:
+- [X] T057 [P] [US1] Build the queue state store `src/lib/stores/queue.svelte.ts` with Svelte 5 runes. It subscribes to `job://progress` and `batch://summary`, keeps jobs keyed by id, and batches UI updates with `requestAnimationFrame`
+- [X] T058 [US1] Build the Import screen `src/routes/import/+page.svelte`:
   - a link input with paste detection;
   - a preview card (artwork, name, owner, track count, and a "best-effort public import" label when `fetchMode = public_fallback`);
   - the **Import & download** button;
   - an error state that suggests signing in for `private` and explains `public_source_changed`;
   - a "My playlists / Liked songs" section for connected accounts
-- [ ] T059 [US1] Build the Queue screen `src/routes/queue/+page.svelte`: batches with overall progress, a virtualized job list with state icons, per-track progress and error reasons, and pause, resume, cancel and retry for each job and each batch
-- [ ] T060 [US1] Build the accounts settings and the guided "bring your own app" setup (FR-004c) in `src/routes/settings/accounts/+page.svelte`. Each platform gets a step-by-step dialog: create a developer app, set the redirect `http://127.0.0.1` (loopback), paste the client ID (and secret where needed), then connect. Show the connected and expired status with Reconnect and Disconnect, and note the Spotify Premium and SoundCloud Artist Pro requirements
-- [ ] T061 [US1] Build the tools section `src/routes/settings/tools/+page.svelte` (versions, Update, custom path), and add a first-run tools install step with progress to `src/routes/onboarding/+page.svelte`
+- [X] T059 [US1] Build the Queue screen `src/routes/queue/+page.svelte`: batches with overall progress, a virtualized job list with state icons, per-track progress and error reasons, and pause, resume, cancel and retry for each job and each batch
+- [X] T060 [US1] Build the accounts settings and the guided "bring your own app" setup (FR-004c) in `src/routes/settings/accounts/+page.svelte`. Each platform gets a step-by-step dialog: create a developer app, set the redirect `http://127.0.0.1` (loopback), paste the client ID (and secret where needed), then connect. Show the connected and expired status with Reconnect and Disconnect, and note the Spotify Premium and SoundCloud Artist Pro requirements
+- [X] T061 [US1] Build the tools section `src/routes/settings/tools/+page.svelte` (versions, Update, custom path), and add a first-run tools install step with progress to `src/routes/onboarding/+page.svelte`
 
 **Checkpoint**: US1 is fully usable on its own (MVP); validate with quickstart V1–V5
 

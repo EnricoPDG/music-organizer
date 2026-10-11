@@ -29,7 +29,8 @@ TypeScript bindings are **generated** from the Rust definitions with tauri-spect
 
 | Command | Input | Output |
 |---------|-------|--------|
-| `list_jobs` | `{ batchId? , states? }` | `DownloadJob[]` |
+| `list_batches` | `{}` | `BatchView[]`: name, platform, counts per state (newest first) |
+| `list_jobs` | `{ batchId? }` | `JobView[]`: job state plus track title, artists, artwork URL and match confidence |
 | `pause_jobs` / `resume_jobs` / `cancel_jobs` / `retry_jobs` | `{ jobIds? , batchId? }` | `{ affected }` |
 
 ### Matching (US2)
@@ -72,7 +73,8 @@ TypeScript bindings are **generated** from the Rust definitions with tauri-spect
 | `connect_account` | `{ platform, clientId, clientSecret? }` | `AccountStatus`. Opens the system browser and waits for the loopback callback (timeout 5 min) |
 | `disconnect_account` | `{ platform }` | `()`. Removes the credential store entry (FR-004a) |
 | `get_settings` / `update_settings` | `{}` / `Partial<Settings>` | `Settings` |
-| `tools_status` / `install_tools` | `{}` | `ToolsStatus { ytDlp, deno, ffmpeg: { installed, version, updateAvailable } }` |
+| `tools_status` / `install_tools` | `{}` | `ToolsStatus { tools: ToolInfo[], ready, installing, message }` |
+| `set_tool_paths` | `ToolPaths` | `ToolsStatus`. User-chosen tool locations, applied immediately |
 
 ## Events (backend → UI)
 
@@ -83,7 +85,8 @@ TypeScript bindings are **generated** from the Rust definitions with tauri-spect
 | `scan://progress` | `{ scanId, found, processed, skipped[] }` | At most 4 per second |
 | `library://changed` | `{ trackIds?, scope: "tracks" \| "playlists" \| "all" }` | After each write, so views refresh |
 | `account://status` | `AccountStatus` | When a sign-in expires or is reconnected |
-| `tools://status` | `ToolsStatus` | During tool install and update |
+| `tools://status` | `ToolsStatus` | After tool install |
+| `tools://progress` | `string` (step description) | During tool install |
 
 ## UI contract (screens)
 
