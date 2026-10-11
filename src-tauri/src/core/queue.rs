@@ -252,7 +252,13 @@ pub fn parse_progress(line: &str) -> Option<f64> {
 pub fn classify_download_error(stderr: &str) -> (&'static str, String) {
     let s = stderr.to_lowercase();
     let pick = |kind: &'static str, msg: &str| (kind, msg.to_string());
-    if s.contains("no space left") {
+    // A usage error means the tool itself is wrong (e.g. an old yt-dlp): retrying won't help.
+    if s.contains("no such option") || s.contains("usage: yt-dlp") {
+        pick(
+            "tool_missing",
+            "The installed yt-dlp is too old for this app. Open Settings → Tools to install the app's own copy.",
+        )
+    } else if s.contains("no space left") {
         pick("disk_full", "The disk is full. Free some space and retry.")
     } else if s.contains("sign in to confirm your age")
         || s.contains("age-restricted")
@@ -1256,6 +1262,11 @@ mod tests {
         assert_eq!(
             classify_download_error("OSError: [Errno 28] No space left on device").0,
             "disk_full"
+        );
+        // Regression: an old system yt-dlp lacks --js-runtimes; must not be retried 5 times.
+        assert_eq!(
+            classify_download_error("yt-dlp: error: no such option: --js-runtimes").0,
+            "tool_missing"
         );
         assert_eq!(
             classify_download_error("ERROR: something odd happened").1,

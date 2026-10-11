@@ -79,17 +79,41 @@ pub struct ToolsStatus {
     pub message: Option<String>,
 }
 
-/// Resolves where each tool is: user override, then managed install, then the system PATH.
+/// Resolves where each tool is. yt-dlp and Deno: a user-chosen path, else the app's own pinned
+/// install. A copy found on the system is never used for them, because an old one breaks
+/// downloads (yt-dlp before 2025.11 has no `--js-runtimes`). FFmpeg isn't shipped by the app,
+/// so the system copy is used.
 pub struct ToolLocator {
     managed_dir: PathBuf,
     overrides: RwLock<ToolPaths>,
+    system_dirs: Vec<PathBuf>,
 }
 
 impl ToolLocator {
     pub fn new(managed_dir: PathBuf, overrides: ToolPaths) -> Self {
+        Self::with_system_dirs(managed_dir, overrides, system_search_dirs())
+    }
+
+    /// Search `system_dirs` instead of PATH (tests).
+    pub fn with_system_dirs(
+        managed_dir: PathBuf,
+        overrides: ToolPaths,
+        system_dirs: Vec<PathBuf>,
+    ) -> Self {
         Self {
             managed_dir,
             overrides: RwLock::new(overrides),
+            system_dirs,
+        }
+    }
+
+    /// The user chose a path for this tool.
+    pub fn has_override(&self, tool: Tool) -> bool {
+        let o = self.overrides.read().expect("overrides lock");
+        match tool {
+            Tool::YtDlp => o.yt_dlp.is_some(),
+            Tool::Deno => o.deno.is_some(),
+            Tool::Ffmpeg => o.ffmpeg.is_some(),
         }
     }
 
@@ -124,27 +148,26 @@ impl ToolLocator {
         if managed.is_file() {
             return Some((managed, true));
         }
-        find_on_path(match tool {
-            Tool::YtDlp => "yt-dlp",
-            Tool::Deno => "deno",
-            Tool::Ffmpeg => "ffmpeg",
-        })
-        .map(|p| (p, false))
+        if tool != Tool::Ffmpeg {
+            return None;
+        }
+        self.system_dirs
+            .iter()
+            .map(|d| d.join(exe("ffmpeg")))
+            .find(|p| p.is_file())
+            .map(|p| (p, false))
     }
 }
 
-/// Look up an executable on PATH, plus the usual Homebrew locations (GUI apps on macOS don't
-/// inherit the shell PATH).
-fn find_on_path(name: &str) -> Option<PathBuf> {
+/// PATH plus the usual Homebrew locations (GUI apps on macOS don't inherit the shell PATH).
+fn system_search_dirs() -> Vec<PathBuf> {
     let mut dirs: Vec<PathBuf> = std::env::var_os("PATH")
         .map(|p| std::env::split_paths(&p).collect())
         .unwrap_or_default();
     if cfg!(target_os = "macos") {
         dirs.extend(["/opt/homebrew/bin", "/usr/local/bin"].map(PathBuf::from));
     }
-    dirs.into_iter()
-        .map(|d| d.join(exe(name)))
-        .find(|p| p.is_file())
+    dirs
 }
 
 pub struct ToolManager {
@@ -387,6 +410,33 @@ mod tests {
             .collect();
         assert!(verify_sha256(b"abc", &good).is_ok());
         assert!(verify_sha256(b"abd", &good).is_err());
+    }
+
+    /// Regression: an old yt-dlp in /usr/local/bin (2025.03.31, no `--js-runtimes`) was picked up
+    /// instead of installing the pinned copy, and every download failed.
+    #[test]
+    fn system_copies_are_ignored_except_ffmpeg() {
+        let dir = tempfile::tempdir().unwrap();
+        let system = dir.path().join("bin");
+        std::fs::create_dir_all(&system).unwrap();
+        for name in ["yt-dlp", "deno", "ffmpeg"] {
+            std::fs::write(system.join(exe(name)), b"x").unwrap();
+        }
+        let loc = ToolLocator::with_system_dirs(
+            dir.path().join("tools"),
+            ToolPaths::default(),
+            vec![system.clone()],
+        );
+        assert_eq!(
+            loc.locate(Tool::YtDlp),
+            None,
+            "a system yt-dlp must not be used"
+        );
+        assert_eq!(loc.locate(Tool::Deno), None);
+        assert_eq!(
+            loc.locate(Tool::Ffmpeg),
+            Some((system.join(exe("ffmpeg")), false))
+        );
     }
 
     #[test]
