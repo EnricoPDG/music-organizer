@@ -1,6 +1,6 @@
 [package]
 name = "music-organizer"
-version = "0.1.0"
+version = "2.0.0"
 description = "Organize your music library: import playlists, match to YouTube, download tagged audio"
 edition = "2024"
 rust-version = "1.85"

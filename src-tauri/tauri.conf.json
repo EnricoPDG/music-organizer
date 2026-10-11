@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Music Organizer",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "identifier": "dev.musicorganizer.app",
   "build": {
     "beforeDevCommand": "pnpm dev",
@@ -23,7 +23,9 @@
       "csp": "default-src 'self'; img-src 'self' asset: http://asset.localhost https: data:; style-src 'self' 'unsafe-inline'; connect-src ipc: http://ipc.localhost",
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPCACHE/artwork/**"]
+        "scope": [
+          "$APPCACHE/artwork/**"
+        ]
       }
     }
   },
@@ -36,6 +38,28 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "shortDescription": "Organize your music library",
+    "longDescription": "Import playlists from Spotify, YouTube and SoundCloud, match them to YouTube and download tagged audio.",
+    "category": "Music",
+    "copyright": "Copyright (c) 2026 Enrico Papsch Di Giacomo",
+    "macOS": {
+      "signingIdentity": "-",
+      "minimumSystemVersion": "12.0"
+    },
+    "linux": {
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libsecret-1-0"
+        ]
+      },
+      "rpm": {
+        "depends": [
+          "webkit2gtk4.1",
+          "libsecret"
+        ]
+      }
+    }
   }
 }
