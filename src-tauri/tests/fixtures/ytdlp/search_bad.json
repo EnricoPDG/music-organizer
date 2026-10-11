@@ -1,0 +1,14 @@
+{
+ "_type": "playlist",
+ "id": "ytsearch10:bad",
+ "entries": [
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "badVideo001",
+   "title": "Bad Artist - Bad Song",
+   "channel": "Bad Artist",
+   "duration": 180
+  }
+ ]
+}

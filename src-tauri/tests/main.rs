@@ -5,9 +5,18 @@
 mod common;
 
 mod contract_selftest;
+mod contract_soundcloud;
+mod contract_spotify;
+mod contract_youtube;
 
 mod db;
 mod dedup;
+mod finalize;
+mod importer;
+mod matcher;
+mod matcher_accuracy;
 mod net;
+mod queue;
 mod sanitize;
 mod secrets;
+mod tagger;

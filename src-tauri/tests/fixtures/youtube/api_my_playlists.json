@@ -1,0 +1,19 @@
+{
+ "kind": "youtube#playlistListResponse",
+ "items": [
+  {
+   "id": "PLmine1",
+   "snippet": {
+    "title": "Gym",
+    "thumbnails": {
+     "high": {
+      "url": "https://i.ytimg.com/vi/x/hq.jpg"
+     }
+    }
+   },
+   "contentDetails": {
+    "itemCount": 12
+   }
+  }
+ ]
+}

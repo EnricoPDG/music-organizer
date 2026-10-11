@@ -1,0 +1,43 @@
+{
+ "kind": "youtube#playlistItemListResponse",
+ "nextPageToken": "PAGE2",
+ "pageInfo": {
+  "totalResults": 3
+ },
+ "items": [
+  {
+   "kind": "youtube#playlistItem",
+   "snippet": {
+    "title": "Queen \u2013 Bohemian Rhapsody (Official Video Remastered)",
+    "position": 0,
+    "videoOwnerChannelTitle": "Queen Official",
+    "resourceId": {
+     "kind": "youtube#video",
+     "videoId": "fJ9rUzIMcZQ"
+    },
+    "thumbnails": {
+     "high": {
+      "url": "https://i.ytimg.com/vi/fJ9rUzIMcZQ/hqdefault.jpg"
+     }
+    }
+   }
+  },
+  {
+   "kind": "youtube#playlistItem",
+   "snippet": {
+    "title": "Survivor - Eye Of The Tiger (Official HD Video)",
+    "position": 1,
+    "videoOwnerChannelTitle": "SurvivorVEVO",
+    "resourceId": {
+     "kind": "youtube#video",
+     "videoId": "btPJPFnesV4"
+    },
+    "thumbnails": {
+     "high": {
+      "url": "https://i.ytimg.com/vi/btPJPFnesV4/hqdefault.jpg"
+     }
+    }
+   }
+  }
+ ]
+}

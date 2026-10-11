@@ -1,6 +1,7 @@
 //! Shared helpers for integration tests.
 
 pub mod contract;
+pub mod library;
 
 use music_organizer_lib::net::{Net, RetryPolicy};
 use music_organizer_lib::platforms::AdapterCtx;

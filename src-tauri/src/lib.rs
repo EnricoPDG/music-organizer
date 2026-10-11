@@ -63,7 +63,7 @@ pub fn run() {
             let db = db::Db::open(&dirs.data.join("library.db"))?;
             let net = Arc::new(net::Net::new(net::RetryPolicy::default()));
             let tools: Arc<dyn tools::ToolRunner> = Arc::new(tools::fake::FakeToolRunner::new());
-            let registry = Arc::new(platforms::Registry::new(Vec::new()));
+            let registry = Arc::new(platforms::registry());
             app.manage(AppState {
                 db,
                 net,

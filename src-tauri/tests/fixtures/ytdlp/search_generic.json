@@ -1,0 +1,22 @@
+{
+ "_type": "playlist",
+ "id": "ytsearch10:x",
+ "entries": [
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "goodVideo01",
+   "title": "Some Song",
+   "channel": "Some Artist - Topic",
+   "duration": 200
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "coverVid001",
+   "title": "Some Song (Cover)",
+   "channel": "Covers Inc",
+   "duration": 200
+  }
+ ]
+}

@@ -148,7 +148,10 @@ impl ToolRunner for FakeToolRunner {
                     on_line(&format!("progress:{pct}"));
                     tokio::task::yield_now().await;
                 }
-                std::fs::copy(source, out).map_err(|e| ToolError::Failed {
+                // Output templates use %(ext)s; the fake keeps the source file's extension.
+                let ext = source.extension().and_then(|e| e.to_str()).unwrap_or("bin");
+                let out = out.replace("%(ext)s", ext);
+                std::fs::copy(source, &out).map_err(|e| ToolError::Failed {
                     code: None,
                     stderr: e.to_string(),
                 })?;
@@ -156,5 +159,52 @@ impl ToolRunner for FakeToolRunner {
             }
             Response::Fail(e) => Err(e.clone()),
         }
+    }
+}
+
+/// Delegates to one of two runners depending on a flag (e.g. offline → online in tests).
+pub struct SwitchRunner {
+    off: std::sync::Arc<dyn ToolRunner>,
+    on: std::sync::Arc<dyn ToolRunner>,
+    flag: std::sync::Arc<std::sync::atomic::AtomicBool>,
+}
+
+impl SwitchRunner {
+    pub fn new(
+        off: std::sync::Arc<dyn ToolRunner>,
+        on: std::sync::Arc<dyn ToolRunner>,
+        flag: std::sync::Arc<std::sync::atomic::AtomicBool>,
+    ) -> Self {
+        Self { off, on, flag }
+    }
+
+    fn pick(&self) -> &std::sync::Arc<dyn ToolRunner> {
+        if self.flag.load(Ordering::SeqCst) {
+            &self.on
+        } else {
+            &self.off
+        }
+    }
+}
+
+#[async_trait]
+impl ToolRunner for SwitchRunner {
+    async fn run_json(
+        &self,
+        tool: Tool,
+        args: &[String],
+        cancel: &CancellationToken,
+    ) -> Result<serde_json::Value, ToolError> {
+        self.pick().run_json(tool, args, cancel).await
+    }
+
+    async fn run_streaming(
+        &self,
+        tool: Tool,
+        args: &[String],
+        on_line: &mut (dyn for<'a> FnMut(&'a str) + Send),
+        cancel: &CancellationToken,
+    ) -> Result<(), ToolError> {
+        self.pick().run_streaming(tool, args, on_line, cancel).await
     }
 }

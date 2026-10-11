@@ -1,0 +1,32 @@
+{
+ "collection": [
+  {
+   "kind": "track",
+   "id": 201,
+   "title": "Lights Out",
+   "user": {
+    "username": "Odesza"
+   },
+   "duration": 245000,
+   "artwork_url": "https://i1.sndcdn.com/artworks-201-large.jpg",
+   "permalink_url": "https://soundcloud.com/odesza/t201",
+   "publisher_metadata": {
+    "artist": "Odesza",
+    "isrc": "USUM71900001"
+   }
+  },
+  {
+   "kind": "track",
+   "id": 202,
+   "title": "Say My Name",
+   "user": {
+    "username": "Odesza"
+   },
+   "duration": 262000,
+   "artwork_url": "https://i1.sndcdn.com/artworks-202-large.jpg",
+   "permalink_url": "https://soundcloud.com/odesza/t202",
+   "publisher_metadata": null
+  }
+ ],
+ "next_href": null
+}

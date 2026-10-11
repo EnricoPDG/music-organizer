@@ -1,6 +1,11 @@
 //! Platform adapters (contracts/platform-adapter.md, constitution Principle I). The core works
 //! only with [`PlatformAdapter`] and the normalized types; it never matches on a platform name.
 
+pub mod common;
+pub mod soundcloud;
+pub mod spotify;
+pub mod youtube;
+
 use crate::core::model::{NormalizedCollection, NormalizedTrack, ResourceKind, ResourceRef};
 use crate::error::{AppError, ErrorKind};
 use crate::net::{Net, NetError};
@@ -215,7 +220,15 @@ pub trait PlatformAdapter: Send + Sync {
     }
 }
 
-/// Every registered adapter. Adding a platform = a new module plus one line here.
+/// The adapters shipped with the app. Adding a platform = a new module plus one line here.
+pub fn registry() -> Registry {
+    Registry::new(vec![
+        Arc::new(youtube::YoutubeAdapter::new()),
+        Arc::new(spotify::SpotifyAdapter::new()),
+        Arc::new(soundcloud::SoundcloudAdapter::new()),
+    ])
+}
+
 pub struct Registry {
     adapters: Vec<Arc<dyn PlatformAdapter>>,
 }

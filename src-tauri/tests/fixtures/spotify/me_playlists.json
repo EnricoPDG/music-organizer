@@ -1,0 +1,20 @@
+{
+ "items": [
+  {
+   "id": "6wnPbEqh4bIBGwdTcfDdMU",
+   "name": "Road Trip Classics",
+   "images": [
+    {
+     "url": "https://mosaic.scdn.co/640/abc"
+    }
+   ],
+   "items": {
+    "total": 6
+   },
+   "external_urls": {
+    "spotify": "https://open.spotify.com/playlist/6wnPbEqh4bIBGwdTcfDdMU"
+   }
+  }
+ ],
+ "next": null
+}

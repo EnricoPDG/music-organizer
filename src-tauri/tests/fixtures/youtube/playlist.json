@@ -1,0 +1,131 @@
+{
+ "_type": "playlist",
+ "id": "PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI",
+ "title": "Road Trip Classics",
+ "channel": "Nathalia S.",
+ "uploader": "Nathalia S.",
+ "webpage_url": "https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI",
+ "thumbnails": [
+  {
+   "url": "https://i.ytimg.com/vi/fJ9rUzIMcZQ/hqdefault.jpg",
+   "height": 360,
+   "width": 480
+  }
+ ],
+ "entries": [
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "fJ9rUzIMcZQ",
+   "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ",
+   "title": "Queen – Bohemian Rhapsody (Official Video Remastered)",
+   "duration": 355.0,
+   "channel": "Queen Official",
+   "channel_id": "UCfJ9rUzIMcZQfJ9rUzIMcZQ",
+   "uploader": "Queen Official",
+   "thumbnails": [
+    {
+     "url": "https://i.ytimg.com/vi/fJ9rUzIMcZQ/hqdefault.jpg",
+     "height": 360,
+     "width": 480
+    }
+   ]
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "btPJPFnesV4",
+   "url": "https://www.youtube.com/watch?v=btPJPFnesV4",
+   "title": "Survivor - Eye Of The Tiger (Official HD Video)",
+   "duration": 246.0,
+   "channel": "SurvivorVEVO",
+   "channel_id": "UCbtPJPFnesV4btPJPFnesV4",
+   "uploader": "SurvivorVEVO",
+   "thumbnails": [
+    {
+     "url": "https://i.ytimg.com/vi/btPJPFnesV4/hqdefault.jpg",
+     "height": 360,
+     "width": 480
+    }
+   ]
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "xxxxxxxxxx1",
+   "url": "https://www.youtube.com/watch?v=xxxxxxxxxx1",
+   "title": "[Private video]",
+   "duration": null,
+   "channel": null,
+   "channel_id": "UCxxxxxxxxxx1xxxxxxxxxx1",
+   "uploader": null,
+   "thumbnails": []
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "1w7OgIMMRc4",
+   "url": "https://www.youtube.com/watch?v=1w7OgIMMRc4",
+   "title": "Sweet Child O' Mine",
+   "duration": 356.0,
+   "channel": "Guns N' Roses - Topic",
+   "channel_id": "UC1w7OgIMMRc41w7OgIMMRc4",
+   "uploader": "Guns N' Roses - Topic",
+   "thumbnails": [
+    {
+     "url": "https://i.ytimg.com/vi/1w7OgIMMRc4/hqdefault.jpg",
+     "height": 360,
+     "width": 480
+    }
+   ]
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "xxxxxxxxxx2",
+   "url": "https://www.youtube.com/watch?v=xxxxxxxxxx2",
+   "title": "[Deleted video]",
+   "duration": null,
+   "channel": null,
+   "channel_id": "UCxxxxxxxxxx2xxxxxxxxxx2",
+   "uploader": null,
+   "thumbnails": []
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "9jK-NcRmVcw",
+   "url": "https://www.youtube.com/watch?v=9jK-NcRmVcw",
+   "title": "Europe - The Final Countdown (Official Video)",
+   "duration": 310.0,
+   "channel": "EuropeVEVO",
+   "channel_id": "UC9jK-NcRmVcw9jK-NcRmVcw",
+   "uploader": "EuropeVEVO",
+   "thumbnails": [
+    {
+     "url": "https://i.ytimg.com/vi/9jK-NcRmVcw/hqdefault.jpg",
+     "height": 360,
+     "width": 480
+    }
+   ]
+  },
+  {
+   "_type": "url",
+   "ie_key": "Youtube",
+   "id": "Zi_XLOBDo_Y",
+   "url": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y",
+   "title": "Billie Jean",
+   "duration": 294.0,
+   "channel": "Michael Jackson - Topic",
+   "channel_id": "UCZi_XLOBDo_YZi_XLOBDo_Y",
+   "uploader": "Michael Jackson - Topic",
+   "thumbnails": [
+    {
+     "url": "https://i.ytimg.com/vi/Zi_XLOBDo_Y/hqdefault.jpg",
+     "height": 360,
+     "width": 480
+    }
+   ]
+  }
+ ]
+}

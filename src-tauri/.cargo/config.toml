@@ -1,2 +1,6 @@
 [alias]
 lint = "clippy --all-targets -- -D warnings"
+
+[build]
+# The dev machine is short on disk; the incremental cache grows by hundreds of MB.
+incremental = false

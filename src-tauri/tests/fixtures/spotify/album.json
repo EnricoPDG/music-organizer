@@ -1,0 +1,48 @@
+{
+ "id": "4yP0hdKOZPNshxUOjY0cZj",
+ "name": "After Hours",
+ "artists": [
+  {
+   "name": "The Weeknd"
+  }
+ ],
+ "images": [
+  {
+   "url": "https://i.scdn.co/image/ah640",
+   "width": 640,
+   "height": 640
+  }
+ ],
+ "external_urls": {
+  "spotify": "https://open.spotify.com/album/4yP0hdKOZPNshxUOjY0cZj"
+ },
+ "tracks": {
+  "next": null,
+  "items": [
+   {
+    "type": "track",
+    "id": "a1",
+    "name": "Alone Again",
+    "artists": [
+     {
+      "name": "The Weeknd"
+     }
+    ],
+    "duration_ms": 250040,
+    "track_number": 1
+   },
+   {
+    "type": "track",
+    "id": "0VjIjW4GlUZAMYd2vXMi3b",
+    "name": "Blinding Lights",
+    "artists": [
+     {
+      "name": "The Weeknd"
+     }
+    ],
+    "duration_ms": 200040,
+    "track_number": 9
+   }
+  ]
+ }
+}

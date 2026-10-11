@@ -8,6 +8,7 @@ use governor::{DefaultDirectRateLimiter, Quota, RateLimiter};
 use reqwest::{Client, RequestBuilder, Response, StatusCode};
 use std::collections::HashMap;
 use std::num::NonZeroU32;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
@@ -80,6 +81,7 @@ pub struct Net {
     client: Client,
     policy: RetryPolicy,
     limiters: Mutex<HashMap<String, Arc<DefaultDirectRateLimiter>>>,
+    requests: AtomicUsize,
 }
 
 impl Net {
@@ -93,6 +95,7 @@ impl Net {
             client,
             policy,
             limiters: Mutex::new(HashMap::new()),
+            requests: AtomicUsize::new(0),
         }
     }
 
@@ -116,6 +119,11 @@ impl Net {
             .clone()
     }
 
+    /// Requests sent so far, counting each retry (lets tests prove I/O went through here).
+    pub fn request_count(&self) -> usize {
+        self.requests.load(Ordering::SeqCst)
+    }
+
     pub fn client(&self) -> &Client {
         &self.client
     }
@@ -131,6 +139,7 @@ impl Net {
         loop {
             limiter.until_ready().await;
             let last = attempt >= self.policy.max_attempts;
+            self.requests.fetch_add(1, Ordering::SeqCst);
             let result = build(&self.client)
                 .timeout(self.policy.timeout)
                 .send()

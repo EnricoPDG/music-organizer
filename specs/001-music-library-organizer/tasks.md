@@ -164,15 +164,15 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
 
 ### Tests for User Story 1 (write first, must FAIL) ⚠️
 
-- [ ] T034 [P] [US1] Record the YouTube fixtures in `src-tauri/tests/fixtures/youtube/` (yt-dlp `--flat-playlist -J` output for a playlist, a single video, a playlist with a private or removed entry, and a `music.youtube.com` link). Write the contract test `src-tauri/tests/contract_youtube.rs` using `adapter_contract_suite!`
-- [ ] T035 [P] [US1] Record the Spotify fixtures in `src-tauri/tests/fixtures/spotify/`:
+- [X] T034 [P] [US1] Record the YouTube fixtures in `src-tauri/tests/fixtures/youtube/` (yt-dlp `--flat-playlist -J` output for a playlist, a single video, a playlist with a private or removed entry, and a `music.youtube.com` link). Write the contract test `src-tauri/tests/contract_youtube.rs` using `adapter_contract_suite!`
+- [X] T035 [P] [US1] Record the Spotify fixtures in `src-tauri/tests/fixtures/spotify/`:
   - Web API JSON for an owned playlist (`GET /playlists/{id}/items`, two pages), a non-owned playlist (metadata only, without `items`), `GET /tracks/{id}`, an album, and `/me/library` liked tracks;
   - the public embed page HTML for a non-owned playlist;
   - a changed embed page that must give `PublicSourceChanged`;
   - a 429 response with `Retry-After`.
   Write the contract test `src-tauri/tests/contract_spotify.rs`, which also asserts the correct `fetch_mode`
-- [ ] T036 [P] [US1] Record the SoundCloud fixtures in `src-tauri/tests/fixtures/soundcloud/` (yt-dlp JSON for a set and a track, an `on.soundcloud.com` short link, and API JSON for `/me/likes` and `/me/playlists`). Write the contract test `src-tauri/tests/contract_soundcloud.rs`
-- [ ] T037 [P] [US1] Write matcher tests in `src-tauri/tests/matcher.rs`. Cover the scoring signals from research R7:
+- [X] T036 [P] [US1] Record the SoundCloud fixtures in `src-tauri/tests/fixtures/soundcloud/` (yt-dlp JSON for a set and a track, an `on.soundcloud.com` short link, and API JSON for `/me/likes` and `/me/playlists`). Write the contract test `src-tauri/tests/contract_soundcloud.rs`
+- [X] T037 [P] [US1] Write matcher tests in `src-tauri/tests/matcher.rs`. Cover the scoring signals from research R7:
   - an ISRC match gives a strong boost;
   - title similarity uses Jaro-Winkler;
   - an artist found in the title or channel counts;
@@ -180,13 +180,13 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - official and "- Topic" channels get a boost;
   - "live/cover/remix/sped up/8D/karaoke/instrumental" are penalized unless the source title contains them.
   Also test the levels: `high ≥ 0.85`, `medium ≥ 0.65`, `low` otherwise; and that `signals` explains the score
-- [ ] T038 [P] [US1] Write the matcher accuracy test in `src-tauri/tests/matcher_accuracy.rs`. It uses a labelled set of ≥ 200 tracks (`src-tauri/tests/fixtures/ytdlp/match_set/*.json`, each with recorded `ytsearch10` results and the correct video id), asserts ≥ 90% correct (SC-002), and prints a per-case report on failure
-- [ ] T039 [P] [US1] Write importer tests in `src-tauri/tests/importer.rs`, using the fake adapter and `FakeToolRunner`:
+- [X] T038 [P] [US1] Write the matcher accuracy test in `src-tauri/tests/matcher_accuracy.rs`. It uses a labelled set of ≥ 200 tracks (`src-tauri/tests/fixtures/ytdlp/match_set/*.json`, each with recorded `ytsearch10` results and the correct video id), asserts ≥ 90% correct (SC-002), and prints a per-case report on failure
+- [X] T039 [P] [US1] Write importer tests in `src-tauri/tests/importer.rs`, using the fake adapter and `FakeToolRunner`:
   - importing creates a Playlist, tracks, `SourceRef`s, matches and jobs;
   - importing the same playlist again creates no new tracks or files, and its jobs become `skipped` (FR-014, SC-005);
   - the same song in two playlists creates one track and two `PlaylistEntry` rows;
   - YouTube tracks get `method = direct`, `confidence = 1`
-- [ ] T040 [P] [US1] Write download queue tests in `src-tauri/tests/queue.rs` for the full state machine in data-model.md:
+- [X] T040 [P] [US1] Write download queue tests in `src-tauri/tests/queue.rs` for the full state machine in data-model.md:
   - `queued → matching → downloading → tagging → finalizing → done`;
   - pause and resume; cancel deletes the `.part` file;
   - automatic retries "≤ 5"; then `failed` with an `error_kind`;
@@ -194,8 +194,8 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - concurrency never exceeds `max_parallel_downloads`;
   - on startup, jobs in `downloading/tagging/finalizing` go back to `queued` and leftover `.part` files are deleted;
   - progress events are throttled to ≤ 10 per second
-- [ ] T041 [P] [US1] Write tagger tests in `src-tauri/tests/tagger.rs`. For each of `m4a`, `opus` and `mp3` sample files in `src-tauri/tests/fixtures/audio/`, write and then read back: title, artists, album, album artist, track number, year, cover art, and the custom source URL and ID
-- [ ] T042 [P] [US1] Write the atomic finalize test in `src-tauri/tests/finalize.rs`:
+- [X] T041 [P] [US1] Write tagger tests in `src-tauri/tests/tagger.rs`. For each of `m4a`, `opus` and `mp3` sample files in `src-tauri/tests/fixtures/audio/`, write and then read back: title, artists, album, album artist, track number, year, cover art, and the custom source URL and ID
+- [X] T042 [P] [US1] Write the atomic finalize test in `src-tauri/tests/finalize.rs`:
   - the download goes to `<music folder>/.music-organizer/tmp/<job>.part`;
   - the final path comes from the naming pattern and `sanitize`;
   - no file appears at the final path until the rename;
@@ -225,23 +225,23 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
   - pass `--js-runtimes deno:<path>` and `--ffmpeg-location`;
   - build the commands for flat playlist JSON, `ytsearch10:` JSON, and audio download in the format chosen in settings (m4a: `-f ba[ext=m4a]`, no re-encode; opus: `-f ba[acodec=opus]`, remuxed; mp3: `-x --audio-format mp3`);
   - parse `--progress-template` output into progress values
-- [ ] T047 [P] [US1] Implement the YouTube adapter in `src-tauri/src/platforms/youtube.rs`. Public links go through yt-dlp. Sign-in uses the YouTube Data API v3 (`playlists?mine=true`, the `LL` liked playlist, `playlistItems`). URL parsing covers `youtube.com/playlist`, `watch?v=&list=`, `youtu.be`, `music.youtube.com` and `shorts`. `provides_audio = true`, and `youtube_video_id` is set on each track. T034 must pass
-- [ ] T048 [P] [US1] Implement the Spotify adapter in `src-tauri/src/platforms/spotify.rs`:
+- [X] T047 [P] [US1] Implement the YouTube adapter in `src-tauri/src/platforms/youtube.rs`. Public links go through yt-dlp. Sign-in uses the YouTube Data API v3 (`playlists?mine=true`, the `LL` liked playlist, `playlistItems`). URL parsing covers `youtube.com/playlist`, `watch?v=&list=`, `youtu.be`, `music.youtube.com` and `shorts`. `provides_audio = true`, and `youtube_video_id` is set on each track. T034 must pass
+- [X] T048 [P] [US1] Implement the Spotify adapter in `src-tauri/src/platforms/spotify.rs`:
   - the official Web API (PKCE, no client secret): `GET /playlists/{id}` metadata, `GET /playlists/{id}/items` with paging when the user owns or collaborates on the playlist, single `GET /tracks/{id}` and `GET /albums/{id}`, and `/me/library` for liked tracks;
   - `isrc` from `external_ids`;
   - for non-owned public playlists, the embed-page fallback (`fetch_mode = PublicFallback`), returning `PublicSourceChanged` when parsing fails.
   T035 must pass
-- [ ] T049 [P] [US1] Implement the SoundCloud adapter in `src-tauri/src/platforms/soundcloud.rs`. Public sets and tracks go through yt-dlp, and `on.soundcloud.com` short links are resolved. Sign-in uses the official API with OAuth 2.1 + PKCE (`/me/playlists`, `/me/likes/tracks`), and the single-use refresh tokens are rotated in the keyring. T036 must pass
-- [ ] T050 [US1] Register the three adapters in `platforms::registry()` in `src-tauri/src/platforms/mod.rs`
-- [ ] T051 [US1] Implement the matcher in `src-tauri/src/core/matcher.rs`. It builds the query `"<artists> - <title>"`, runs `ytsearch10:` through the ToolRunner, scores the candidates as in R7, and stores the `Match` (with `signals` JSON) and the top `MatchCandidate` rows (rank 1 = best, keeping ≥ 3 when available). It must never overwrite a `method` of `user_candidate` or `user_url`. T037 and T038 must pass
-- [ ] T052 [US1] Implement the tagger in `src-tauri/src/core/tagger.rs`: lofty write for MP4 atoms, Vorbis comments and ID3v2.4, including artwork; an artwork cache by SHA-256 in `<app cache>/artwork/`; and square-cropped YouTube thumbnails when there is no album art. T041 must pass
-- [ ] T053 [US1] Implement the importer in `src-tauri/src/core/importer.rs`:
+- [X] T049 [P] [US1] Implement the SoundCloud adapter in `src-tauri/src/platforms/soundcloud.rs`. Public sets and tracks go through yt-dlp, and `on.soundcloud.com` short links are resolved. Sign-in uses the official API with OAuth 2.1 + PKCE (`/me/playlists`, `/me/likes/tracks`), and the single-use refresh tokens are rotated in the keyring. T036 must pass
+- [X] T050 [US1] Register the three adapters in `platforms::registry()` in `src-tauri/src/platforms/mod.rs`
+- [X] T051 [US1] Implement the matcher in `src-tauri/src/core/matcher.rs`. It builds the query `"<artists> - <title>"`, runs `ytsearch10:` through the ToolRunner, scores the candidates as in R7, and stores the `Match` (with `signals` JSON) and the top `MatchCandidate` rows (rank 1 = best, keeping ≥ 3 when available). It must never overwrite a `method` of `user_candidate` or `user_url`. T037 and T038 must pass
+- [X] T052 [US1] Implement the tagger in `src-tauri/src/core/tagger.rs`: lofty write for MP4 atoms, Vorbis comments and ID3v2.4, including artwork; an artwork cache by SHA-256 in `<app cache>/artwork/`; and square-cropped YouTube thumbnails when there is no album art. T041 must pass
+- [X] T053 [US1] Implement the importer in `src-tauri/src/core/importer.rs`:
   - `NormalizedCollection` → upsert the Playlist (`kind = imported`);
   - for each track, look up the `SourceRef` and then the `dedup_key` (which also finds scanned files, FR-015b); only then create a Track (`origin = downloaded`, `status = pending`);
   - write `PlaylistEntry` positions;
   - create an `ImportBatch` and `DownloadJob`s, marking tracks already `available` as `skipped`.
   T039 must pass
-- [ ] T054 [US1] Implement the download queue in `src-tauri/src/core/queue.rs`:
+- [X] T054 [US1] Implement the download queue in `src-tauri/src/core/queue.rs`:
   - a tokio worker pool bounded by `max_parallel_downloads`, with 1–3 s jitter between YouTube requests;
   - the state machine from data-model.md, with every transition saved to the database;
   - `.part` temp files → tag → atomic rename into the path from the naming pattern (sanitized);

@@ -1,0 +1,129 @@
+{
+ "href": "x",
+ "total": 6,
+ "next": null,
+ "items": [
+  {
+   "added_at": "2025-03-01T10:00:00Z",
+   "item": {
+    "type": "track",
+    "id": "3MrRksHupTVEQ7YbA0FsZK",
+    "name": "The Final Countdown",
+    "artists": [
+     {
+      "name": "Europe",
+      "id": "europe"
+     }
+    ],
+    "album": {
+     "name": "The Final Countdown (Expanded Edition)",
+     "images": [
+      {
+       "url": "https://i.scdn.co/image/3MrRksHupTVEQ7YbA0FsZK640",
+       "width": 640,
+       "height": 640
+      },
+      {
+       "url": "https://i.scdn.co/image/3MrRksHupTVEQ7YbA0FsZK300",
+       "width": 300,
+       "height": 300
+      }
+     ]
+    },
+    "duration_ms": 310333,
+    "track_number": 1,
+    "external_ids": {
+     "isrc": "SEBGA8600001"
+    },
+    "external_urls": {
+     "spotify": "https://open.spotify.com/track/3MrRksHupTVEQ7YbA0FsZK"
+    },
+    "is_local": false
+   }
+  },
+  {
+   "added_at": "2025-03-01T10:00:00Z",
+   "item": {
+    "type": "episode",
+    "id": "ep1",
+    "name": "Some Podcast Episode"
+   }
+  },
+  {
+   "added_at": "2025-03-01T10:00:00Z",
+   "item": {
+    "type": "track",
+    "id": null,
+    "name": "My Demo",
+    "artists": [
+     {
+      "name": "Me",
+      "id": "me"
+     }
+    ],
+    "album": {
+     "name": "",
+     "images": [
+      {
+       "url": "https://i.scdn.co/image/local1640",
+       "width": 640,
+       "height": 640
+      },
+      {
+       "url": "https://i.scdn.co/image/local1300",
+       "width": 300,
+       "height": 300
+      }
+     ]
+    },
+    "duration_ms": 120000,
+    "track_number": 1,
+    "external_ids": {
+     "isrc": ""
+    },
+    "external_urls": {
+     "spotify": "https://open.spotify.com/track/local1"
+    },
+    "is_local": true
+   }
+  },
+  {
+   "added_at": "2025-03-01T10:00:00Z",
+   "item": {
+    "type": "track",
+    "id": "5ChkMS8OtdzJeqyybCc9R5",
+    "name": "Billie Jean",
+    "artists": [
+     {
+      "name": "Michael Jackson",
+      "id": "michaeljackson"
+     }
+    ],
+    "album": {
+     "name": "Thriller",
+     "images": [
+      {
+       "url": "https://i.scdn.co/image/5ChkMS8OtdzJeqyybCc9R5640",
+       "width": 640,
+       "height": 640
+      },
+      {
+       "url": "https://i.scdn.co/image/5ChkMS8OtdzJeqyybCc9R5300",
+       "width": 300,
+       "height": 300
+      }
+     ]
+    },
+    "duration_ms": 293826,
+    "track_number": 6,
+    "external_ids": {
+     "isrc": "USSM19902991"
+    },
+    "external_urls": {
+     "spotify": "https://open.spotify.com/track/5ChkMS8OtdzJeqyybCc9R5"
+    },
+    "is_local": false
+   }
+  }
+ ]
+}

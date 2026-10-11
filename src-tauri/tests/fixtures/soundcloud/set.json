@@ -1,0 +1,54 @@
+{
+ "_type": "playlist",
+ "id": "1234",
+ "title": "Soulhack",
+ "uploader": "Forss",
+ "webpage_url": "https://soundcloud.com/forss/sets/soulhack",
+ "extractor": "soundcloud:set",
+ "entries": [
+  {
+   "id": "101",
+   "title": "Flickermood",
+   "uploader": "Forss",
+   "uploader_id": "forss",
+   "duration": 213.4,
+   "thumbnail": "https://i1.sndcdn.com/artworks-101-t500x500.jpg",
+   "webpage_url": "https://soundcloud.com/forss/track-101",
+   "extractor": "soundcloud",
+   "artist": "Forss",
+   "album": "Soulhack"
+  },
+  {
+   "id": "102",
+   "title": "Forss - Journeyman",
+   "uploader": "Forss Official",
+   "uploader_id": "forss official",
+   "duration": 254.0,
+   "thumbnail": "https://i1.sndcdn.com/artworks-102-t500x500.jpg",
+   "webpage_url": "https://soundcloud.com/forss official/track-102",
+   "extractor": "soundcloud"
+  },
+  {
+   "id": "103",
+   "title": "Pheromones",
+   "uploader": "Forss",
+   "uploader_id": "forss",
+   "duration": 281.9,
+   "thumbnail": "https://i1.sndcdn.com/artworks-103-t500x500.jpg",
+   "webpage_url": "https://soundcloud.com/forss/track-103",
+   "extractor": "soundcloud"
+  },
+  null,
+  {
+   "id": "104",
+   "title": "Pegasus (Preview)",
+   "uploader": "Forss",
+   "uploader_id": "forss",
+   "duration": 30.0,
+   "thumbnail": "https://i1.sndcdn.com/artworks-104-t500x500.jpg",
+   "webpage_url": "https://soundcloud.com/forss/track-104",
+   "extractor": "soundcloud",
+   "availability": "premium_only"
+  }
+ ]
+}

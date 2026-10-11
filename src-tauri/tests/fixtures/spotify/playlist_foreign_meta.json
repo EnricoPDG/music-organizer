@@ -1,0 +1,18 @@
+{
+ "id": "37i9dQZF1DXcBWIGoYBM5M",
+ "name": "Today's Top Hits",
+ "owner": {
+  "id": "spotify",
+  "display_name": "Spotify"
+ },
+ "images": [
+  {
+   "url": "https://i.scdn.co/image/tth",
+   "width": 640,
+   "height": 640
+  }
+ ],
+ "external_urls": {
+  "spotify": "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"
+ }
+}

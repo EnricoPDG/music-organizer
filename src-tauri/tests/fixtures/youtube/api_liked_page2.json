@@ -1,0 +1,25 @@
+{
+ "kind": "youtube#playlistItemListResponse",
+ "pageInfo": {
+  "totalResults": 3
+ },
+ "items": [
+  {
+   "kind": "youtube#playlistItem",
+   "snippet": {
+    "title": "Billie Jean",
+    "position": 2,
+    "videoOwnerChannelTitle": "Michael Jackson - Topic",
+    "resourceId": {
+     "kind": "youtube#video",
+     "videoId": "Zi_XLOBDo_Y"
+    },
+    "thumbnails": {
+     "high": {
+      "url": "https://i.ytimg.com/vi/Zi_XLOBDo_Y/hqdefault.jpg"
+     }
+    }
+   }
+  }
+ ]
+}
