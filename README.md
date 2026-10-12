@@ -28,7 +28,7 @@ The builds are not code-signed yet, so your system will warn you the first time:
 - **Linux (AppImage):** make it executable with `chmod +x Music.Organizer_*.AppImage`.
   Signing in to accounts needs a Secret Service provider (GNOME Keyring or KWallet).
 
-## What works in 2.0.0
+## What works in 2.0
 
 - Import a playlist, album or track by link from Spotify, YouTube or SoundCloud, with a preview.
 - Automatic matching of Spotify and SoundCloud tracks to YouTube.
