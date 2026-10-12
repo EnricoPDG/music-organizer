@@ -33,7 +33,7 @@ The builds are not code-signed yet, so your system will warn you the first time:
 - Import a playlist, album or track by link from Spotify, YouTube or SoundCloud, with a preview.
 - Automatic matching of Spotify and SoundCloud tracks to YouTube.
 - Tagged downloads (M4A by default; Opus and MP3 need FFmpeg installed) into
-  `Artist/Album/NN - Title`, with a live download list: pause, resume, cancel, retry.
+  `Artist - Title`, with a live download list: pause, resume, cancel, retry.
 - Re-importing never creates duplicates; interrupted downloads never leave broken files.
 - Optional sign-in to import private playlists and liked songs, using your own free developer app
   for each platform (the app walks you through it). Sign-ins are kept in your system's credential

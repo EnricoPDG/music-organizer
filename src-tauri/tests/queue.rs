@@ -52,11 +52,7 @@ async fn happy_path_downloads_tags_and_files_every_track() {
     let states = wait_batch(&env.db, &batch).await;
     assert!(states.iter().all(|(_, s)| s == "done"), "{states:?}");
 
-    let path = env
-        .music
-        .join("Some Artist")
-        .join("Some Artist Album")
-        .join("01 - Some Song.m4a");
+    let path = env.music.join("Some Artist - Some Song.m4a");
     assert!(path.exists(), "expected {}", path.display());
     let tags = music_organizer_lib::core::tagger::read_tags(&path).unwrap();
     assert_eq!(tags.title.as_deref(), Some("Some Song"));

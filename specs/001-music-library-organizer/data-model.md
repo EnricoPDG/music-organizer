@@ -224,7 +224,7 @@ chooses "skip conflicting". Applying writes a JSON undo journal before moving an
 | Key | Default |
 |-----|---------|
 | `audio_format` | `m4a` |
-| `naming_pattern` | `{album_artist}/{album}/{track:02} - {title}` |
+| `naming_pattern` | `{artist} - {title}` |
 | `theme` | `system` (`light`, `dark`) |
 | `reduce_motion` | follows the OS setting |
 | `max_parallel_downloads` | `3` (1–5) |

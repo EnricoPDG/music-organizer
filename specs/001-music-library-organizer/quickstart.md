@@ -55,7 +55,7 @@ Use a **fresh profile**: an empty app data folder and a new, empty music folder.
 2. Click **Import & download**.
 3. ✅ The Queue shows each track moving through queued → downloading → done, and the UI stays
    responsive (you can scroll the library while it downloads).
-4. ✅ Files appear as `Artist/Album/NN - Title.m4a`. Opening one in the system player shows the
+4. ✅ Files appear as `Artist - Title.m4a` in the music folder. Opening one in the system player shows the
    title, artist and artwork (SC-003).
 
 ### V3. Import Spotify & SoundCloud by public link (US1, US2, FR-004b, FR-005/006)

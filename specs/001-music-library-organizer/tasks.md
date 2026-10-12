@@ -136,7 +136,7 @@ use fixtures under `src-tauri/tests/fixtures/` and the `FakeToolRunner`.
 - [X] T026 [P] Set up logging in `src-tauri/src/logging.rs`: tracing with a rolling file appender in the app log directory, plus a redaction layer that masks `access_token`, `refresh_token`, `client_secret`, `code` and `Authorization` values
 - [X] T027 Implement the settings repository and commands `get_settings` and `update_settings` in `src-tauri/src/commands/settings.rs`, with the defaults from data-model.md:
   - `audio_format` = `m4a`;
-  - `naming_pattern` = `{album_artist}/{album}/{track:02} - {title}`;
+  - `naming_pattern` = `{artist} - {title}`;
   - `theme` = `system`;
   - `reduce_motion` follows the OS;
   - `max_parallel_downloads` = `3`, "(1–5)";

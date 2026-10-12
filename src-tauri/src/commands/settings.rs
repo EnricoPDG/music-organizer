@@ -56,7 +56,9 @@ pub struct Settings {
     pub tool_paths: ToolPaths,
 }
 
-pub const DEFAULT_NAMING_PATTERN: &str = "{album_artist}/{album}/{track:02} - {title}";
+pub const DEFAULT_NAMING_PATTERN: &str = "{artist} - {title}";
+/// Default before 2.0.0 shipped; settings still holding it move to the new default on load.
+const LEGACY_DEFAULT_NAMING_PATTERN: &str = "{album_artist}/{album}/{track:02} - {title}";
 
 impl Default for Settings {
     fn default() -> Self {
@@ -104,9 +106,13 @@ pub fn load(conn: &Connection) -> AppResult<Settings> {
         })
         .optional()?;
     // Unknown or outdated stored values fall back to defaults rather than failing startup.
-    Ok(raw
+    let mut s: Settings = raw
         .and_then(|s| serde_json::from_str(&s).ok())
-        .unwrap_or_default())
+        .unwrap_or_default();
+    if s.naming_pattern == LEGACY_DEFAULT_NAMING_PATTERN {
+        s.naming_pattern = DEFAULT_NAMING_PATTERN.into();
+    }
+    Ok(s)
 }
 
 pub fn apply_patch(mut s: Settings, p: SettingsPatch) -> AppResult<Settings> {
@@ -175,4 +181,58 @@ pub async fn update_settings(
             Ok(next)
         })
         .await
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::core::queue::{PatternVars, render_pattern};
+
+    fn conn() -> Connection {
+        let c = Connection::open_in_memory().unwrap();
+        c.execute(
+            "CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)",
+            [],
+        )
+        .unwrap();
+        c
+    }
+
+    #[test]
+    fn legacy_default_pattern_moves_to_artist_dash_title() {
+        let c = conn();
+        let old = Settings {
+            naming_pattern: LEGACY_DEFAULT_NAMING_PATTERN.into(),
+            ..Default::default()
+        };
+        save(&c, &old).unwrap();
+        assert_eq!(load(&c).unwrap().naming_pattern, DEFAULT_NAMING_PATTERN);
+    }
+
+    #[test]
+    fn custom_pattern_is_kept() {
+        let c = conn();
+        let s = Settings {
+            naming_pattern: "{artist}/{title}".into(),
+            ..Default::default()
+        };
+        save(&c, &s).unwrap();
+        assert_eq!(load(&c).unwrap().naming_pattern, "{artist}/{title}");
+    }
+
+    #[test]
+    fn default_pattern_is_a_single_file_name() {
+        let vars = PatternVars {
+            artist: "Daft Punk".into(),
+            album_artist: "Daft Punk".into(),
+            album: "Discovery".into(),
+            title: "One More Time".into(),
+            track: Some(1),
+            year: Some(2001),
+        };
+        assert_eq!(
+            render_pattern(DEFAULT_NAMING_PATTERN, &vars),
+            "Daft Punk - One More Time"
+        );
+    }
 }

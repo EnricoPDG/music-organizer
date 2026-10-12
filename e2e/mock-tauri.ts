@@ -70,7 +70,7 @@ export async function respond(page: Page, cmd: string, value: unknown): Promise<
 export const baseResponses: Responses = {
 	get_settings: {
 		audioFormat: 'm4a',
-		namingPattern: '{album_artist}/{album}/{track:02} - {title}',
+		namingPattern: '{artist} - {title}',
 		theme: 'light',
 		reduceMotion: true,
 		maxParallelDownloads: 3,
