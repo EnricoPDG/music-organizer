@@ -59,7 +59,7 @@ pnpm tauri build    # build installers into src-tauri/target/release/bundle/
 Checks: `pnpm check`, `pnpm lint`, `pnpm test`, `pnpm test:e2e`, and `cargo test` in `src-tauri/`.
 
 To publish a release, push a tag such as `v2.0.1`. GitHub Actions builds the installers for all
-three systems and creates a draft release to review and publish.
+three systems and publishes a release with the installers.
 
 ## License
 
